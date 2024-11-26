@@ -85,7 +85,7 @@ public class Player {
         if(speed>MAX_SPPED){
             speed = MAX_SPPED;
         } else{
-            speed += 3f;
+            speed += 10f;
         }
     }
     public void speedDown(){
