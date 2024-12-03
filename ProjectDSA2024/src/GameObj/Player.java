@@ -1,7 +1,6 @@
 package GameObj;
 
 import javax.imageio.ImageIO;
-import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
@@ -36,7 +35,7 @@ public class Player {
     public static final double PLAYER_SIZE = 64;
     private double x;
     private double y;
-    private final float MAX_SPPED = 1f;
+    private final float MAX_SPEED = 1f;
     private float speed = 0f;
     private float angle = 0f;
     private  Image image;
@@ -82,8 +81,8 @@ public class Player {
     }
     public void speedUp(){
         speedUp = true;
-        if(speed>MAX_SPPED){
-            speed = MAX_SPPED;
+        if(speed> MAX_SPEED){
+            speed = MAX_SPEED;
         } else{
             speed += 3f;
         }

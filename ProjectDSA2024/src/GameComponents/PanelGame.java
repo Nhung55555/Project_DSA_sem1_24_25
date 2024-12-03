@@ -13,6 +13,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import GameObj.Bullet;
+import GameObj.Effects;
 import GameObj.Player;
 import GameObj.Rocket;
 
@@ -33,6 +34,7 @@ public class PanelGame extends JComponent {
     private Player player;
     private List<Bullet> bullets;
     private List<Rocket> rockets;
+    private List<Effects> effectsList;
     public void start(){
         width = getWidth();
         height = getHeight();
@@ -64,28 +66,39 @@ public class PanelGame extends JComponent {
 
     private void addRocket(){
         Random ran = new Random();
-        int locationY = ran.nextInt(height-50) +25;
-        Rocket rocket = new Rocket();
-        rocket.changeLocation(0,locationY);
-        rocket.changeAngle(0);
-        rockets.add(rocket);
+//        int locationY = ran.nextInt(height-50) +25;
+//        Rocket rocket = new Rocket();
+//        rocket.changeLocation(0,locationY);
+//        rocket.changeAngle(0);
+//        rockets.add(rocket);
         int locationY2 = ran.nextInt(height-50) + 25;
         Rocket rocket2 = new Rocket();
         rocket2.changeLocation(width, locationY2);
         rocket2.changeAngle(180);
         rockets.add(rocket2);
 
-
     }
     private void checkBullets(Bullet bullet){
         for(int i=0; i<rockets.size();i++){
             Rocket rocket = rockets.get(i);
-            if(rocket!=null){
+            if(rocket!=null) {
                 Area area = new Area(bullet.getShape());
                 area.intersect(rocket.getShape());
-                if(!area.isEmpty()){
-                    rockets.remove(rocket);
-                    bullets.remove(bullet);
+                if (!area.isEmpty()) {
+                    double x = bullet.getCenterX();
+                    double y = bullet.getCenterY();
+                    effectsList.add(new Effects(x, y, 5, 5, 25, 0.7f, new Color(230, 207, 105)));
+                    if (!rocket.updateHealth(0.5)) {
+                        effectsList.add(new Effects(x, y, 5, 5, 75, 0.05f, new Color(248, 140, 9)));
+                        effectsList.add(new Effects(x, y, 5, 5, 75, 0.1f, new Color(255, 78, 78)));
+                        effectsList.add(new Effects(x, y, 10, 10, 100, 0.3f, new Color(49, 234, 78)));
+                        effectsList.add(new Effects(x, y, 10, 5, 100, 0.5f, new Color(126, 210, 84)));
+                        effectsList.add(new Effects(x, y, 10, 5, 150, 0.2f, new Color(213, 227, 51)));
+                        //testing purposes
+                        // System.out.println("Current location :" + bullet.getCenterX() + ", " + bullet.getCenterY());
+                        rockets.remove(rocket);
+                        bullets.remove(bullet);
+                    }
                 }
             }
         }
@@ -95,12 +108,13 @@ public class PanelGame extends JComponent {
         player = new Player();
         player.changeLocation(150,150);
         rockets = new ArrayList<>();
+        effectsList = new ArrayList<>();
         new Thread(new Runnable() {
             @Override
             public void run() {
                 while(start){
                     addRocket();
-                    sleep(3000);
+                    sleep(900);
                 }
             }
         }).start();
@@ -206,6 +220,17 @@ public class PanelGame extends JComponent {
                             bullets.remove(bullet);
                         }
                     }
+                    for(int i =0; i < effectsList.size(); i ++){
+                        Effects boomEffects = effectsList.get(i);
+                        if(boomEffects != null) {
+                            boomEffects.update();
+                            if(!boomEffects.check()){
+                                effectsList.remove(boomEffects);
+                            }
+                        }else{
+                            effectsList.remove(boomEffects);
+                        }
+                    }
                     sleep(1);
                 }
             }
@@ -227,6 +252,12 @@ public class PanelGame extends JComponent {
             Rocket rocket=rockets.get(i);
             if(rocket!=null){
                 rocket.draw(g2);
+            }
+        }
+        for(int i=0; i<effectsList.size();i++){
+            Effects effects =effectsList.get(i);
+            if(effects!=null){
+                effects.draw(g2);
             }
         }
     }

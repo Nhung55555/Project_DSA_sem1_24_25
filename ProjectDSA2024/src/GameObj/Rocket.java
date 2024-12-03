@@ -9,8 +9,9 @@ import java.awt.geom.Path2D;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
-public class Rocket {
+public class Rocket extends HealthBar{
     public Rocket() {
+          super(new HealthPoints(20, 20));
 //        this.image = new ImageIcon(getClass().getResource("/GameImage/rocket.png")).getImage();
 //        Path2D p = new Path2D.Double();
 //        p.moveTo(15,10);
@@ -74,8 +75,8 @@ public class Rocket {
         tran.rotate(Math.toRadians(angle), ROCKET_SIZE/2, ROCKET_SIZE/2);
         g2.drawImage(image,tran,null);
         Shape shap = getShape();
+        hpRender(g2, shap, y);
         g2.setTransform(oldTransform);
-
         g2.setColor(Color.red);
 //        g2.draw(shap);
         g2.draw(shap.getBounds2D());
