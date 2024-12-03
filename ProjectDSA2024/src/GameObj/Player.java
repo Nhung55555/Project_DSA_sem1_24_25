@@ -3,15 +3,17 @@ package GameObj;
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
+import java.awt.geom.Area;
+import java.awt.geom.Path2D;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
-public class Player {
-//    public Player(){
-//        this.image = new ImageIcon(getClass().getResource("/GameImage/plane.png")).getImage();
-//        this.image_speed = new ImageIcon(getClass().getResource("/GameImage/plane_speed.png")).getImage();;
-//    }
+
+public class Player extends HealthBar{
+
     public Player() {
+        super(new HealthPoints(100,90));
+
         try {
             BufferedImage originalImage = ImageIO.read(getClass().getResourceAsStream("/GameImage/plane.png"));
             int newWidth = originalImage.getWidth() * 2;
@@ -28,6 +30,19 @@ public class Player {
 
             this.image = scaledImage;
             this.image_speed = scaledImage1;
+
+            Path2D p = new Path2D.Double();
+            p.moveTo(PLAYER_SIZE * 0.5, 0); // Nose
+            p.lineTo(PLAYER_SIZE * 0.8, PLAYER_SIZE * 0.3); // Right wing tip
+            p.lineTo(PLAYER_SIZE * 0.6, PLAYER_SIZE * 0.5); // Right edge of body
+            p.lineTo(PLAYER_SIZE * 0.6, PLAYER_SIZE * 0.8); // Tail bottom-right
+            p.lineTo(PLAYER_SIZE * 0.4, PLAYER_SIZE * 0.8); // Tail bottom-left
+            p.lineTo(PLAYER_SIZE * 0.4, PLAYER_SIZE * 0.5); // Left edge of body
+            p.lineTo(PLAYER_SIZE * 0.2, PLAYER_SIZE * 0.3); // Left wing tip
+            p.closePath(); // Back to Nose
+            playerShap = new Area(p);
+
+
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -35,12 +50,14 @@ public class Player {
     public static final double PLAYER_SIZE = 64;
     private double x;
     private double y;
-    private final float MAX_SPEED = 1f;
+    private final float MAX_SPEED = 6f;
     private float speed = 0f;
     private float angle = 0f;
+    private Area playerShap;
     private  Image image;
     private  Image image_speed;
     private boolean speedUp;
+    private boolean alive = true;
 
     public void changeLocation(double x,double y){
         this.x = x;
@@ -64,12 +81,24 @@ public class Player {
         AffineTransform tran = new AffineTransform();
         tran.rotate(Math.toRadians(angle-90), PLAYER_SIZE/2, PLAYER_SIZE/2);
         g2.drawImage(speedUp ? image_speed : image, tran, null);
+
+        hpRender(g2,getShape(),y);
+        Shape shp = getShape();
+        g2.setColor(new Color(255, 0, 0, 100)); // Semi-transparent red
         g2.setTransform(oldTransform);
-//        AffineTransform tran = new AffineTransform();
-//        tran.rotate(Math.toRadians(angle-90), PLAYER_SIZE/2, PLAYER_SIZE/2);
-//        g2.drawImage(speedUp ? image_speed : image, tran, null);
-//        g2.setTransform(oldTransform);
+        g2.draw(shp);
+        g2.draw(getShape().getBounds());
+
+
     }
+
+    public Area getShape(){
+        AffineTransform afx = new AffineTransform();
+        afx.translate(x,y);
+        afx.rotate(Math.toRadians(angle-90), PLAYER_SIZE/2,PLAYER_SIZE/2);
+        return new Area(afx.createTransformedShape(playerShap));
+    }
+
     public double getX(){
         return x;
     }
@@ -94,6 +123,19 @@ public class Player {
         } else{
             speed -= 0.003f;
         }
+    }
+
+    public boolean isAlive(){
+        return alive;
+    }
+    public void setAlive(boolean alive){
+        this.alive = alive;
+    }
+    public void reset(){
+        alive=true;
+        resetHealth();
+        angle=0;
+        speed=0;
     }
 
 }

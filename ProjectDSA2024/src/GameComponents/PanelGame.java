@@ -5,6 +5,7 @@ import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.geom.Area;
+import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,6 +17,7 @@ import GameObj.Bullet;
 import GameObj.Effects;
 import GameObj.Player;
 import GameObj.Rocket;
+import GameObj.sound.Sound;
 
 public class PanelGame extends JComponent {
     //game fps
@@ -30,11 +32,13 @@ public class PanelGame extends JComponent {
 
     private final int FPS = 60;
     private final int TARGET_TIME = 1000000000/FPS;
+    private Sound sound;
     //game object
     private Player player;
     private List<Bullet> bullets;
     private List<Rocket> rockets;
-    private List<Effects> effectsList;
+    private List<Effects> boomEffects;
+    private int score =0;
     public void start(){
         width = getWidth();
         height = getHeight();
@@ -85,30 +89,69 @@ public class PanelGame extends JComponent {
                 Area area = new Area(bullet.getShape());
                 area.intersect(rocket.getShape());
                 if (!area.isEmpty()) {
-                    double x = bullet.getCenterX();
-                    double y = bullet.getCenterY();
-                    effectsList.add(new Effects(x, y, 5, 5, 25, 0.7f, new Color(230, 207, 105)));
-                    if (!rocket.updateHealth(0.5)) {
-                        effectsList.add(new Effects(x, y, 5, 5, 75, 0.05f, new Color(248, 140, 9)));
-                        effectsList.add(new Effects(x, y, 5, 5, 75, 0.1f, new Color(255, 78, 78)));
-                        effectsList.add(new Effects(x, y, 10, 10, 100, 0.3f, new Color(49, 234, 78)));
-                        effectsList.add(new Effects(x, y, 10, 5, 100, 0.5f, new Color(126, 210, 84)));
-                        effectsList.add(new Effects(x, y, 10, 5, 150, 0.2f, new Color(213, 227, 51)));
-                        //testing purposes
-                        // System.out.println("Current location :" + bullet.getCenterX() + ", " + bullet.getCenterY());
+                    boomEffects.add(new Effects(bullet.getCenterX(), bullet.getCenterY(), 3,5,60,0.5f, new Color(230,207,105)));
+                    if(!rocket.updateHealth(bullet.getSize())){
+                        score++;
                         rockets.remove(rocket);
-                        bullets.remove(bullet);
+                        sound.shoundDestroy();
+                        double x = rocket.getX()+Rocket.ROCKET_SIZE/2;
+                        double y = rocket.getY()+Rocket.ROCKET_SIZE/2;
+                        boomEffects.add(new Effects(x, y, 5, 5, 75, 0.05f, new Color(248, 140, 9)));
+                        boomEffects.add(new Effects(x, y, 5, 5, 75, 0.1f, new Color(255, 78, 78)));
+                        boomEffects.add(new Effects(x, y, 10, 10, 100, 0.3f, new Color(49, 234, 78)));
+                        boomEffects.add(new Effects(x, y, 10, 5, 100, 0.5f, new Color(126, 210, 84)));
+                        boomEffects.add(new Effects(x, y, 10, 5, 150, 0.2f, new Color(213, 227, 51)));
+                    } else{
+                        sound.shoundHit();
                     }
+                        bullets.remove(bullet);
                 }
             }
         }
     }
 
+    private void checkPlayer(Rocket rocket){
+            if(rocket!=null) {
+                Area area = new Area(player.getShape());
+                area.intersect(rocket.getShape());
+                if (!area.isEmpty()) {
+                    double rocketHp = rocket.getHealth();
+                    if(!rocket.updateHealth(player.getHealth())){
+                        rockets.remove(rocket);
+                        sound.shoundDestroy();
+
+                        double x = rocket.getX()+Rocket.ROCKET_SIZE/2;
+                        double y = rocket.getY()+Rocket.ROCKET_SIZE/2;
+                        boomEffects.add(new Effects(x, y, 5, 5, 75, 0.05f, new Color(248, 140, 9)));
+                        boomEffects.add(new Effects(x, y, 5, 5, 75, 0.1f, new Color(255, 78, 78)));
+                        boomEffects.add(new Effects(x, y, 10, 10, 100, 0.3f, new Color(49, 234, 78)));
+                        boomEffects.add(new Effects(x, y, 10, 5, 100, 0.5f, new Color(126, 210, 84)));
+                        boomEffects.add(new Effects(x, y, 10, 5, 150, 0.2f, new Color(213, 227, 51)));
+                    }
+                    if(!player.updateHealth(rocketHp)){
+                        player.setAlive(false);
+                        sound.shoundDestroy();
+
+                        double x = rocket.getX()+Rocket.ROCKET_SIZE/2;
+                        double y = rocket.getY()+Rocket.ROCKET_SIZE/2;
+                        boomEffects.add(new Effects(x, y, 5, 5, 75, 0.05f, new Color(248, 140, 9)));
+                        boomEffects.add(new Effects(x, y, 5, 5, 75, 0.1f, new Color(255, 78, 78)));
+                        boomEffects.add(new Effects(x, y, 10, 10, 100, 0.3f, new Color(49, 234, 78)));
+                        boomEffects.add(new Effects(x, y, 10, 5, 100, 0.5f, new Color(126, 210, 84)));
+                        boomEffects.add(new Effects(x, y, 10, 5, 150, 0.2f, new Color(213, 227, 51)));
+                    }
+
+                }
+            }
+
+    }
+
     private void intitObjectGame(){
+        sound = new Sound();
         player = new Player();
         player.changeLocation(150,150);
         rockets = new ArrayList<>();
-        effectsList = new ArrayList<>();
+        boomEffects = new ArrayList<>();
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -118,6 +161,13 @@ public class PanelGame extends JComponent {
                 }
             }
         }).start();
+    }
+    private void resetGame(){
+        score=0;
+        rockets.clear();
+        bullets.clear();
+        player.changeLocation(150,150);
+        player.reset();
     }
     private void initKeyboard(){
         key = new Key();
@@ -135,7 +185,10 @@ public class PanelGame extends JComponent {
                     key.setKey_k(true);
                 } else if(e.getKeyCode() == KeyEvent.VK_SPACE){
                     key.setKey_space(true);
+                }else if(e.getKeyCode() == KeyEvent.VK_ENTER) {
+                    key.setKey_enter(true);
                 }
+
             }
             @Override
             public void keyReleased(KeyEvent e){
@@ -149,6 +202,8 @@ public class PanelGame extends JComponent {
                     key.setKey_k(false);
                 }else if(e.getKeyCode() == KeyEvent.VK_SPACE){
                     key.setKey_space(false);
+                }else if(e.getKeyCode() == KeyEvent.VK_ENTER) {
+                    key.setKey_enter(false);
                 }
             }
         });
@@ -157,43 +212,86 @@ public class PanelGame extends JComponent {
             public void run() {
                 float s = 10.0f; //tốc độ quay
                 while(start){
-                    float angle = player.getAngle();
-                    if(key.isKey_left()){
-                        angle-=s;
-                    }
-                    if(key.isKey_right()){
-                        angle +=s;
-                    }
-                    if(key.isKey_j() || key.isKey_k()){
-                        if(shotTime ==0){
-                            if(key.isKey_j()){
-                                bullets.add(0,new Bullet(player.getX(), player.getY(), player.getAngle(), 5,3f));
-                            } else{
-                                bullets.add(0,new Bullet(player.getX(), player.getY(), player.getAngle(), 20,3f));
-                            }
+                    if(player.isAlive()){
+                        float angle = player.getAngle();
+                        if(key.isKey_left()){
+                            angle-=s;
                         }
-                        shotTime++;
-                        if(shotTime==15){
+                        if(key.isKey_right()){
+                            angle +=s;
+                        }
+                        if(key.isKey_j() || key.isKey_k()){
+                            if(shotTime ==0){
+                                if(key.isKey_j()){
+                                    bullets.add(0,new Bullet(player.getX(), player.getY(), player.getAngle(), 5,3f));
+                                } else{
+                                    bullets.add(0,new Bullet(player.getX(), player.getY(), player.getAngle(), 20,3f));
+                                }
+                                sound.shoundShoot();
+                            }
+                            shotTime++;
+                            if(shotTime==15){
+                                shotTime =0;
+                            }
+                        } else{
                             shotTime =0;
                         }
-                    } else{
-                        shotTime =0;
-                    }
-                    if(key.isKey_space()){
-                        player.speedUp();
+                        if(key.isKey_space()){
+                            player.speedUp();
+                        }else{
+                            player.speedDown();
+                        } //bỏ space thì trở về speedown
+                        player.update();
+                        player.changeAngle(angle);
                     }else{
-                        player.speedDown();
-                    } //bỏ space thì trở về speedown
-                    player.update();
-                    player.changeAngle(angle);
+                        if(key.isKey_enter()){
+                            resetGame();
+                        }
+                    }
+
+//                    float angle = player.getAngle();
+//                    if(key.isKey_left()){
+//                        angle-=s;
+//                    }
+//                    if(key.isKey_right()){
+//                        angle +=s;
+//                    }
+//                    if(key.isKey_j() || key.isKey_k()){
+//                        if(shotTime ==0){
+//                            if(key.isKey_j()){
+//                                bullets.add(0,new Bullet(player.getX(), player.getY(), player.getAngle(), 5,3f));
+//                            } else{
+//                                bullets.add(0,new Bullet(player.getX(), player.getY(), player.getAngle(), 20,3f));
+//                            }
+//                        }
+//                        shotTime++;
+//                        if(shotTime==15){
+//                            shotTime =0;
+//                        }
+//                    } else{
+//                        shotTime =0;
+//                    }
+//                    if(key.isKey_space()){
+//                        player.speedUp();
+//                    }else{
+//                        player.speedDown();
+//                    } //bỏ space thì trở về speedown
+//                    player.update();
+//                    player.changeAngle(angle);
+
+
                     for(int i=0; i<rockets.size();i++){
                         Rocket rocket=rockets.get(i);
                         if(rocket!=null){
                             rocket.update();
                             if(!rocket.check(width,height)){
                                 rockets.remove(rocket);
-//                                System.out.println("Remove...");
+                            }else{
+                                if(player.isAlive()){
+                                    checkPlayer(rocket);
+                                }
                             }
+
                         }
                     }
                     sleep(FPS);
@@ -220,15 +318,15 @@ public class PanelGame extends JComponent {
                             bullets.remove(bullet);
                         }
                     }
-                    for(int i =0; i < effectsList.size(); i ++){
-                        Effects boomEffects = effectsList.get(i);
-                        if(boomEffects != null) {
-                            boomEffects.update();
-                            if(!boomEffects.check()){
-                                effectsList.remove(boomEffects);
+                    for(int i =0; i < boomEffects.size(); i ++){
+                        Effects boomEffect = boomEffects.get(i);
+                        if(boomEffect != null) {
+                            boomEffect.update();
+                            if(!boomEffect.check()){
+                                boomEffects.remove(boomEffect);
                             }
                         }else{
-                            effectsList.remove(boomEffects);
+                            boomEffects.remove(boomEffect);
                         }
                     }
                     sleep(1);
@@ -241,7 +339,11 @@ public class PanelGame extends JComponent {
         g2.fillRect(0,0,width,height);
     }
     private void drawGame(){
-         player.draw(g2);
+//         player.draw(g2);
+        if(player.isAlive()){
+            player.draw(g2);
+        }
+
          for(int i=0; i<bullets.size(); i++){
              Bullet bullet = bullets.get(i);
              if(bullet != null){
@@ -254,12 +356,37 @@ public class PanelGame extends JComponent {
                 rocket.draw(g2);
             }
         }
-        for(int i=0; i<effectsList.size();i++){
-            Effects effects =effectsList.get(i);
-            if(effects!=null){
-                effects.draw(g2);
+        for(int i=0; i<boomEffects.size();i++){
+            Effects boomEffect =boomEffects.get(i);
+            if(boomEffect!=null){
+                boomEffect.draw(g2);
             }
         }
+        g2.setColor(Color.WHITE);
+        g2.setFont(getFont().deriveFont(Font.BOLD, 15f));
+        g2.drawString("Score : " + score, 10, 20);
+        if (!player.isAlive()) {
+            String text = "GAME OVER";
+            String textKey = "Press key enter to Continue ...";
+            g2.setFont(getFont().deriveFont(Font.BOLD, 50f));
+            FontMetrics fm = g2.getFontMetrics();
+            Rectangle2D r2 = fm.getStringBounds(text, g2);
+            double textWidth = r2.getWidth();
+            double textHeight = r2.getHeight();
+            double x = (width - textWidth) / 2;
+            double y = (height - textHeight) / 2;
+            g2.drawString(text, (int) x, (int) y + fm.getAscent());
+            g2.setFont(getFont().deriveFont(Font.BOLD, 15f));
+            fm = g2.getFontMetrics();
+            r2 = fm.getStringBounds(textKey, g2);
+            textWidth = r2.getWidth();
+            textHeight = r2.getHeight();
+            x = (width - textWidth) / 2;
+            y = (height - textHeight) / 2;
+            g2.drawString(textKey, (int) x, (int) y + fm.getAscent() + 50);
+        }
+
+
     }
     private void render(){
         Graphics g =getGraphics();

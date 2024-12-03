@@ -47,7 +47,8 @@ public class Rocket extends HealthBar{
     public static final double ROCKET_SIZE = 50;
     private double x;
     private double y;
-    private final float speed = 10f;
+    //chỉnh tốc độ
+    private final float speed = 5f;
     private float angle = 0;
     private Image image;
     private Area rocketShap;
