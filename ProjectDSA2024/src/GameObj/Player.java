@@ -14,7 +14,7 @@ public class Player extends HealthBar{
     private final double screenHeight;
 
     public Player(double screenWidth, double screenHeight) {
-        super(new HealthPoints(100,90));
+        super(new HealthPoints(10,10));
         this.screenWidth = screenWidth;
         this.screenHeight = screenHeight;
 
@@ -86,30 +86,6 @@ public class Player extends HealthBar{
             y = screenHeight - PLAYER_SIZE;
         }
 
-//        double newX = x + Math.cos(Math.toRadians(angle)) * speed;
-//        double newY = y + Math.sin(Math.toRadians(angle)) * speed;
-//
-//
-//        // Check for horizontal boundaries
-//        // Check for horizontal boundaries and assign the new position
-//        if (newX >= 0 && newX + PLAYER_SIZE <= screenWidth) {
-//            x = newX;
-//        } else {
-//            // If the new position is out of bounds, snap to the nearest boundary
-//            x = Math.max(0, Math.min(screenWidth - PLAYER_SIZE, newX));
-//        }
-//
-//        // Check for vertical boundaries and assign the new position
-//        if (newY >= 0 && newY + PLAYER_SIZE <= screenHeight) {
-//            y = newY;
-//        } else {
-//            // If the new position is out of bounds, snap to the nearest boundary
-//            y = Math.max(0, Math.min(screenHeight + PLAYER_SIZE, newY));
-//        }
-//        if (y + PLAYER_SIZE >= screenHeight) {
-//            System.out.println("Object has touched the bottom of the screen!");
-//            // You can add any other actions you want to perform here, such as playing a sound, triggering a game event, etc.
-//        }
     }
 
 
@@ -134,8 +110,6 @@ public class Player extends HealthBar{
         g2.setTransform(oldTransform);
         g2.draw(shp);
         g2.draw(getShape().getBounds());
-
-
     }
 
     public Area getShape(){
