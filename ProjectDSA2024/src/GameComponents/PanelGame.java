@@ -80,7 +80,6 @@ public class PanelGame extends JComponent {
         rocket2.changeLocation(width, locationY2);
         rocket2.changeAngle(180);
         rockets.add(rocket2);
-
     }
     private void checkBullets(Bullet bullet){
         for(int i=0; i<rockets.size();i++){
@@ -148,7 +147,7 @@ public class PanelGame extends JComponent {
 
     private void intitObjectGame(){
         sound = new Sound();
-        player = new Player();
+        player = new Player(1366,750);
         player.changeLocation(150,150);
         rockets = new ArrayList<>();
         boomEffects = new ArrayList<>();
@@ -248,37 +247,6 @@ public class PanelGame extends JComponent {
                             resetGame();
                         }
                     }
-
-//                    float angle = player.getAngle();
-//                    if(key.isKey_left()){
-//                        angle-=s;
-//                    }
-//                    if(key.isKey_right()){
-//                        angle +=s;
-//                    }
-//                    if(key.isKey_j() || key.isKey_k()){
-//                        if(shotTime ==0){
-//                            if(key.isKey_j()){
-//                                bullets.add(0,new Bullet(player.getX(), player.getY(), player.getAngle(), 5,3f));
-//                            } else{
-//                                bullets.add(0,new Bullet(player.getX(), player.getY(), player.getAngle(), 20,3f));
-//                            }
-//                        }
-//                        shotTime++;
-//                        if(shotTime==15){
-//                            shotTime =0;
-//                        }
-//                    } else{
-//                        shotTime =0;
-//                    }
-//                    if(key.isKey_space()){
-//                        player.speedUp();
-//                    }else{
-//                        player.speedDown();
-//                    } //bỏ space thì trở về speedown
-//                    player.update();
-//                    player.changeAngle(angle);
-
 
                     for(int i=0; i<rockets.size();i++){
                         Rocket rocket=rockets.get(i);

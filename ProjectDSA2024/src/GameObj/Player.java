@@ -10,9 +10,13 @@ import java.io.IOException;
 
 
 public class Player extends HealthBar{
+    private final double screenWidth;
+    private final double screenHeight;
 
-    public Player() {
+    public Player(double screenWidth, double screenHeight) {
         super(new HealthPoints(100,90));
+        this.screenWidth = screenWidth;
+        this.screenHeight = screenHeight;
 
         try {
             BufferedImage originalImage = ImageIO.read(getClass().getResourceAsStream("/GameImage/plane.png"));
@@ -59,6 +63,9 @@ public class Player extends HealthBar{
     private boolean speedUp;
     private boolean alive = true;
 
+
+
+
     public void changeLocation(double x,double y){
         this.x = x;
         this.y=y;
@@ -66,7 +73,46 @@ public class Player extends HealthBar{
     public void update(){
         x+= Math.cos(Math.toRadians(angle)) * speed;
         y+= Math.sin(Math.toRadians(angle)) * speed;
+        // Check for and prevent movement beyond screen boundaries
+        if (x < 0) {
+            x = 0;
+        } else if (x + PLAYER_SIZE > screenWidth) {
+            x = screenWidth - PLAYER_SIZE;
+        }
+
+        if (y < 0) {
+            y = 0;
+        } else if (y + PLAYER_SIZE > screenHeight) {
+            y = screenHeight - PLAYER_SIZE;
+        }
+
+//        double newX = x + Math.cos(Math.toRadians(angle)) * speed;
+//        double newY = y + Math.sin(Math.toRadians(angle)) * speed;
+//
+//
+//        // Check for horizontal boundaries
+//        // Check for horizontal boundaries and assign the new position
+//        if (newX >= 0 && newX + PLAYER_SIZE <= screenWidth) {
+//            x = newX;
+//        } else {
+//            // If the new position is out of bounds, snap to the nearest boundary
+//            x = Math.max(0, Math.min(screenWidth - PLAYER_SIZE, newX));
+//        }
+//
+//        // Check for vertical boundaries and assign the new position
+//        if (newY >= 0 && newY + PLAYER_SIZE <= screenHeight) {
+//            y = newY;
+//        } else {
+//            // If the new position is out of bounds, snap to the nearest boundary
+//            y = Math.max(0, Math.min(screenHeight + PLAYER_SIZE, newY));
+//        }
+//        if (y + PLAYER_SIZE >= screenHeight) {
+//            System.out.println("Object has touched the bottom of the screen!");
+//            // You can add any other actions you want to perform here, such as playing a sound, triggering a game event, etc.
+//        }
     }
+
+
     public void changeAngle(float angle){
         if(angle<0){
             angle = 359;
