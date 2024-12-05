@@ -60,7 +60,6 @@ public class PanelGame extends JComponent {
                 }
             }
         });
-//        initKeyboard();
 
         intitObjectGame();
         initKeyboard();
@@ -70,11 +69,7 @@ public class PanelGame extends JComponent {
 
     private void addRocket() {
         Random ran = new Random();
-//        int locationY = ran.nextInt(height-50) +25;
-//        Rocket rocket = new Rocket();
-//        rocket.changeLocation(0,locationY);
-//        rocket.changeAngle(0);
-//        rockets.add(rocket);
+
         int locationY2 = ran.nextInt(height - 50) + 25;
         Rocket rocket2 = new Rocket();
         rocket2.changeLocation(width, locationY2);
@@ -184,14 +179,12 @@ public class PanelGame extends JComponent {
 
     private void intitObjectGame() {
         sound = new Sound();
-//        if(gameState==1){
-            player = new Player(1366, 750);
-            player.changeLocation(150, 150);
-//        }else if(gameState ==2){
-            bot = new Bot(1366, 750);
-            bot.changeLocation(150, 150);
-//        }
 
+        player = new Player(1366, 750);
+        player.changeLocation(150, 150);
+        
+        bot = new Bot(1366, 750);
+        bot.changeLocation(150, 150);
 
         rockets = new ArrayList<>();
         boomEffects = new ArrayList<>();
