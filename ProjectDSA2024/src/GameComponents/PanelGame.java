@@ -593,6 +593,7 @@ public class PanelGame extends JPanel {
     private Bot bot;
     private List<Bullet> bullets;
     private List<Rocket> rockets;
+    private List<RocketBoss> bossrockets;
     private List<Effects> boomEffects;
     private int phase = 1;
     private int score = 0;
@@ -719,6 +720,7 @@ public class PanelGame extends JPanel {
         player = new Player(1366, 750);
         player.changeLocation(150, 150);
         rockets = new ArrayList<>();
+        bossrockets = new ArrayList<>();
         boomEffects = new ArrayList<>();
         new Thread(new Runnable() {
             @Override
@@ -727,14 +729,23 @@ public class PanelGame extends JPanel {
                     switch (phase) {
                         case 1 -> {
                             System.out.println("Phase 1");
+                            addRocketPhase1(335);
+                            sleep(1200);
+                            addRocketPhase1(167);
+                            addRocketPhase1(501);
+                            sleep(1200);
+                            for (int i = 0; i < 4; i++) {
+                                addRocketPhase1(i * 175 + 85);
+                            }
+                            sleep(1200);
                             for (int i = 0; i < 12; i++) {
                                 addRocketPhase1(i * 63);
                             }
-                            sleep(800);
+                            sleep(1200);
                             for (int i = 0; i < 5; i++) {
                                 addRocketPhase1(i * 160);
                             }
-                            sleep(1000);
+                            sleep(1200);
                             for (int i = 0; i < 10; i++) {
                                 addRocketPhase1(i * 73 + 25);
                             }
