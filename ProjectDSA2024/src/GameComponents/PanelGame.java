@@ -594,7 +594,7 @@ public class PanelGame extends JPanel {
     private List<Bullet> bullets;
     private List<Rocket> rockets;
     private List<Effects> boomEffects;
-    private int phase = 0;
+    private int phase = 1;
     private int score = 0;
 
     public PanelGame() {
@@ -633,7 +633,6 @@ public class PanelGame extends JPanel {
 
     private void addRocket() {
         Random ran = new Random();
-
         int locationY2 = ran.nextInt(height - 50) + 25;
         Rocket rocket2 = new Rocket();
         rocket2.changeLocation(width, locationY2);
@@ -725,9 +724,36 @@ public class PanelGame extends JPanel {
             @Override
             public void run() {
                 while (start) {
-                    for (int i = 0; i < 15; i++)
-                        addRocketPhase1(i*50);
-                    sleep(13000);
+                    switch (phase) {
+                        case 1 -> {
+                            System.out.println("Phase 1");
+                            for (int i = 0; i < 12; i++) {
+                                addRocketPhase1(i * 63);
+                            }
+                            sleep(800);
+                            for (int i = 0; i < 5; i++) {
+                                addRocketPhase1(i * 160);
+                            }
+                            sleep(1000);
+                            for (int i = 0; i < 10; i++) {
+                                addRocketPhase1(i * 73 + 25);
+                            }
+                            sleep(1000);
+                            phase++;
+                        }
+                        case 2 -> {
+                            System.out.println("Phase 2");
+                            for (int i = 0; i < 5; i++) {
+                                addRocketPhase1(i * 50);
+                            }
+                            sleep(1300);
+                            phase++;
+                        }
+                        default -> {
+                            addRocket();
+                            sleep(900);
+                        }
+                    }
                 }
             }
         }).start();
