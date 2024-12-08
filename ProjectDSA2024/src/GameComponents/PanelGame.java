@@ -594,6 +594,7 @@ public class PanelGame extends JPanel {
     private List<Bullet> bullets;
     private List<Rocket> rockets;
     private List<Effects> boomEffects;
+    private int phase = 0;
     private int score = 0;
 
     public PanelGame() {
@@ -638,6 +639,14 @@ public class PanelGame extends JPanel {
         rocket2.changeLocation(width, locationY2);
         rocket2.changeAngle(180);
         rockets.add(rocket2);
+    }
+    private void addRocketPhase1(int locationIndexer){
+        int locationY = locationIndexer;
+        Rocket rocket = new Rocket();
+        rocket.changeLocation(width, locationY);
+        System.out.println(locationY);
+        rocket.changeAngle(180);
+        rockets.add(rocket);
     }
 
     private void checkBullets(Bullet bullet) {
@@ -716,8 +725,9 @@ public class PanelGame extends JPanel {
             @Override
             public void run() {
                 while (start) {
-                    addRocket();
-                    sleep(900);
+                    for (int i = 0; i < 15; i++)
+                        addRocketPhase1(i*50);
+                    sleep(13000);
                 }
             }
         }).start();
