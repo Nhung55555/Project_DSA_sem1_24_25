@@ -753,7 +753,7 @@ public class PanelGame extends JPanel {
                 if (!rocket.updateHealth(player.getHealth())) {
                     rockets.remove(rocket);
                     sound.shoundDestroy();
-
+                    score++;
                     double x = rocket.getX() + Rocket.ROCKET_SIZE / 2;
                     double y = rocket.getY() + Rocket.ROCKET_SIZE / 2;
                     boomEffects.add(new Effects(x, y, 5, 5, 75, 0.05f, new Color(248, 140, 9)));
