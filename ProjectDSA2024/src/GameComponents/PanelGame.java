@@ -597,7 +597,6 @@ public class PanelGame extends JPanel {
     private List<Effects> boomEffects;
     private List<RocketBullets> rocketBullets;
     private int phase = 1;
-    private boolean endPhase = false;
     private int score = 0;
 
     public PanelGame() {
@@ -694,18 +693,21 @@ public class PanelGame extends JPanel {
                 Area area = new Area(bullet.getShape());
                 area.intersect(rocket.getShape());
                 if (!area.isEmpty()) {
-                    boomEffects.add(new Effects(bullet.getCenterX(), bullet.getCenterY(), 3, 5, 60, 0.5f, new Color(230, 207, 105)));
+                    boomEffects.add(new Effects(bullet.getCenterX(), bullet.getCenterY(), 6, 20, 320, 0.5f, new Color(255, 218, 52)));
+                    boomEffects.add(new Effects(bullet.getCenterX(), bullet.getCenterY(), 6, 20, 310, 0.15f, new Color(222, 89, 6)));
+                    boomEffects.add(new Effects(bullet.getCenterX(), bullet.getCenterY(), 6, 20, 220, 0.25f, new Color(255, 42, 4)));
+                    boomEffects.add(new Effects(bullet.getCenterX(), bullet.getCenterY(), 6, 20, 230, 0.7f, new Color(255, 245, 186)));
                     if (!rocket.updateHealth(bullet.getSize())) {
-                        score++;
+                        score += 100;
                         bossrockets.remove(rocket);
                         sound.shoundDestroy();
-                        double x = rocket.getX() + Rocket.ROCKET_SIZE / 2;
-                        double y = rocket.getY() + Rocket.ROCKET_SIZE / 2;
-                        boomEffects.add(new Effects(x, y, 5, 5, 75, 0.05f, new Color(248, 140, 9)));
-                        boomEffects.add(new Effects(x, y, 5, 5, 75, 0.1f, new Color(255, 78, 78)));
-                        boomEffects.add(new Effects(x, y, 10, 10, 100, 0.3f, new Color(49, 234, 78)));
-                        boomEffects.add(new Effects(x, y, 10, 5, 100, 0.5f, new Color(126, 210, 84)));
-                        boomEffects.add(new Effects(x, y, 10, 5, 150, 0.2f, new Color(213, 227, 51)));
+                        double x = rocket.getX() + RocketBoss.ROCKET_BOSS_SIZE / 2;
+                        double y = rocket.getY() + RocketBoss.ROCKET_BOSS_SIZE / 2;
+                        boomEffects.add(new Effects(x, y, 5, 15, 175, 0.25f, new Color(255, 38, 0)));
+                        boomEffects.add(new Effects(x, y, 5, 25, 175, 0.1f, new Color(255, 144, 144)));
+                        boomEffects.add(new Effects(x, y, 10, 12, 200, 0.3f, new Color(246, 227, 9)));
+                        boomEffects.add(new Effects(x, y, 10, 40, 200, 0.5f, new Color(168, 229, 111)));
+                        boomEffects.add(new Effects(x, y, 10, 25, 250, 0.2f, new Color(248, 196, 72)));
                     } else {
                         sound.shoundHit();
                     }
@@ -827,20 +829,23 @@ public class PanelGame extends JPanel {
             @Override
             public void run() {
                 while (start) {
-                    if(phase == 1){
-                        System.out.println("Phase 1");
-                        addRocketPhase1(335);
-                        while(!rockets.isEmpty()){
-                            sleep(10);
-                        }
-                        addBossRocketPhase(450);
-                        while(!bossrockets.isEmpty()){
-                            sleep(10);
-                        }
-                        phase ++;
-                    }
-//                    switch (phase) {
-//                        case 1 -> {
+                    switch (phase) {
+                        case 1 -> {
+                            System.out.println("Phase 1");
+                            for (int i = 0; i < 2; i++) {
+                                addRocketPhase1(i * 63);
+                            }
+                            while(!rockets.isEmpty()){
+                                sleep(10);
+                            }
+                            sleep(500);
+                            System.out.println("Boss Appeared!");
+                            addBossRocketPhase(450);
+                            while(!bossrockets.isEmpty()){
+                                sleep(10);
+                            }
+                            phase ++;
+                            sleep(2000);
 //                            System.out.println("Phase 1");
 //                            addRocketPhase1(335);
 //                            if(rockets.isEmpty()){
@@ -866,20 +871,20 @@ public class PanelGame extends JPanel {
 //                                addRocketPhase1(i * 73 + 25);
 //                            }
 //                            sleep(1000);
-//                        }
-//                        case 2 -> {
-//                            System.out.println("Phase 2");
-//                            for (int i = 0; i < 5; i++) {
-//                                addRocketPhase1(i * 50);
-//                            }
-//                            sleep(1300);
-//                            phase++;
-//                        }
-//                        default -> {
-//                            addRocket();
-//                            sleep(900);
-//                        }
-//                    }
+                        }
+                        case 2 -> {
+                            System.out.println("Phase 2");
+                            for (int i = 0; i < 5; i++) {
+                                addRocketPhase1(i * 50);
+                            }
+                            sleep(13000);
+                            phase++;
+                        }
+                        default -> {
+                            addRocket();
+                            sleep(1900);
+                        }
+                    }
                 }
             }
         }).start();
