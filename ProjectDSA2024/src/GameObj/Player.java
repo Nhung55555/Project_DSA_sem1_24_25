@@ -141,7 +141,7 @@ public class Player extends HealthBar{
         if(speed <= 0){
             speed =0;
         } else{
-            speed -= 0.003f;
+            speed -= 0.15f;
         }
     }
 

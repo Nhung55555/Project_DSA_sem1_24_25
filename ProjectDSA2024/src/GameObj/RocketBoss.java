@@ -22,11 +22,12 @@ public class RocketBoss extends HealthBar{
 
             this.image = scaledImage;
             Path2D p = new Path2D.Double();
-            p.moveTo(315,315); // Adjust starting point to match top left corner
-            p.lineTo(ROCKET_BOSS_SIZE -1 , 80); // Account for the tail section
+            p.moveTo(315,300); // Adjust starting point to match top left corner
+            p.lineTo(ROCKET_BOSS_SIZE -1 , 40); // Account for the tail section
             p.lineTo(ROCKET_BOSS_SIZE +10, ROCKET_BOSS_SIZE / 2); // Adjust endpoint slightly
             p.lineTo(ROCKET_BOSS_SIZE , ROCKET_BOSS_SIZE -10); // Account for the tail section
             p.lineTo(1, ROCKET_BOSS_SIZE-1); // Adjust endpoint to match bottom left corner
+
             rocketShap = new Area(p);
 
 
@@ -69,7 +70,7 @@ public class RocketBoss extends HealthBar{
         Shape shap = getShape();
         hpRender(g2, shap, y);
         g2.setTransform(oldTransform);
-        g2.setColor(Color.black);
+        g2.setColor(Color.red);
 //        g2.draw(shap);
         g2.draw(shap.getBounds2D());
     }

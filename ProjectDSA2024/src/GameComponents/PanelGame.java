@@ -597,6 +597,7 @@ public class PanelGame extends JPanel {
     private List<Effects> boomEffects;
     private List<RocketBullets> rocketBullets;
     private int phase = 1;
+    private boolean endPhase = false;
     private int score = 0;
 
     public PanelGame() {
@@ -826,20 +827,33 @@ public class PanelGame extends JPanel {
             @Override
             public void run() {
                 while (start) {
-                    addBossRocketPhase(350);
-                    sleep(99000);
+                    if(phase == 1){
+                        System.out.println("Phase 1");
+                        addRocketPhase1(335);
+                        while(!rockets.isEmpty()){
+                            sleep(10);
+                        }
+                        addBossRocketPhase(450);
+                        while(!bossrockets.isEmpty()){
+                            sleep(10);
+                        }
+                        phase ++;
+                    }
 //                    switch (phase) {
 //                        case 1 -> {
 //                            System.out.println("Phase 1");
-////                            addRocketPhase1(335);
-////                            sleep(1200);
-////                            addRocketPhase1(167);
-////                            addRocketPhase1(501);
-////                            sleep(1200);
-////                            for (int i = 0; i < 4; i++) {
-////                                addRocketPhase1(i * 175 + 85);
-////                            }
-////                            sleep(1200);
+//                            addRocketPhase1(335);
+//                            if(rockets.isEmpty()){
+//                                phase++;
+//                            }
+//                            sleep(900);
+//                            addRocketPhase1(167);
+//                            addRocketPhase1(501);
+//                            sleep(1200);
+//                            for (int i = 0; i < 4; i++) {
+//                                addRocketPhase1(i * 175 + 85);
+//                            }
+//                            sleep(1200);
 //                            for (int i = 0; i < 12; i++) {
 //                                addRocketPhase1(i * 63);
 //                            }
@@ -852,7 +866,6 @@ public class PanelGame extends JPanel {
 //                                addRocketPhase1(i * 73 + 25);
 //                            }
 //                            sleep(1000);
-//
 //                        }
 //                        case 2 -> {
 //                            System.out.println("Phase 2");
@@ -1114,6 +1127,7 @@ public class PanelGame extends JPanel {
             g2.drawString(textKey, (int) x, (int) y + fm.getAscent() + 50);
         }
     }
+
 
     private void render(){
         Graphics g =getGraphics();
