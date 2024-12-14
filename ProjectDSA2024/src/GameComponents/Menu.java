@@ -62,29 +62,49 @@ package GameComponents;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.net.URL;
 
 public class Menu extends JPanel {
     private JButton startButton;
     private JButton quitButton;
     private JButton botButton;
+    private final Image backgroundImage;
 
-    public Menu(ActionListener startGameListener,ActionListener botButtonListener) {
+    public Menu(ActionListener startGameListener, ActionListener botButtonListener, String backgroundImagePath) {
         setLayout(new BorderLayout());
+
+        // Load the background image
+        backgroundImage = loadImage(backgroundImagePath);
+        if (backgroundImage == null) {
+            System.err.println("Failed to load background image: " + backgroundImagePath);
+        }
+
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.Y_AXIS)); // Arrange buttons vertically
+        buttonPanel.setOpaque(false); // Make the panel transparent so the background shows
+        Dimension buttonSize = new Dimension(150, 40);
 
         // Create the start button
         startButton = new JButton("Start Game");
-        startButton.addActionListener(startGameListener); // Delegate to listener passed by Main
-        add(startButton, BorderLayout.NORTH);
+        startButton.setPreferredSize(buttonSize);
+        startButton.setMaximumSize(buttonSize);
+        startButton.addActionListener(startGameListener);
+        buttonPanel.add(startButton);
+        buttonPanel.add(Box.createRigidArea(new Dimension(0, 10))); // Add spacing
 
-        //create the bot buttom
+        // Create the bot button
         botButton = new JButton("Bot 1");
-        botButton.addActionListener(botButtonListener); // Delegate to botButtonListener
-        add(botButton, BorderLayout.CENTER);
+        botButton.setPreferredSize(buttonSize);
+        botButton.setMaximumSize(buttonSize);
+        botButton.addActionListener(botButtonListener);
+        buttonPanel.add(botButton);
+        buttonPanel.add(Box.createRigidArea(new Dimension(0, 10))); // Add spacing
 
         // Create the quit button
         quitButton = new JButton("Quit Game");
+        quitButton.setPreferredSize(buttonSize);
+        quitButton.setMaximumSize(buttonSize);
         quitButton.addActionListener(e -> {
             System.out.println("Quit Game button clicked");
             int confirm = JOptionPane.showConfirmDialog(
@@ -97,6 +117,34 @@ public class Menu extends JPanel {
                 System.exit(0);
             }
         });
-        add(quitButton, BorderLayout.SOUTH);
+        buttonPanel.add(quitButton);
+
+        buttonPanel.setBorder(BorderFactory.createEmptyBorder(250, 600, 50, 50)); // Adjust as needed
+        add(buttonPanel, BorderLayout.CENTER);
+    }
+
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+
+        // Draw the background image if available
+        if (backgroundImage != null) {
+            g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
+        }
+    }
+
+    private Image loadImage(String path) {
+        try {
+            URL resource = getClass().getResource(path); // Load image as resource
+            if (resource != null) {
+                return new ImageIcon(resource).getImage();
+            } else {
+                System.err.println("Image resource not found: " + path);
+                return null;
+            }
+        } catch (Exception e) {
+            System.err.println("Error loading image: " + e.getMessage());
+            return null;
+        }
     }
 }

@@ -63,16 +63,14 @@ public class Main extends JFrame {
         cardLayout = new CardLayout();
         mainPanel = new JPanel(cardLayout);
 
+
         // Initialize the Menu and Game Panels
-//        menu = new Menu(e -> switchToGamePanel());
         ActionListener startGameListener = e -> switchToGamePanel();
         ActionListener botButtonListener = e -> switchToBotGamePanel();
-        menu = new Menu(startGameListener, botButtonListener);
+        menu = new Menu(startGameListener, botButtonListener, "/GameImage/background.jpg");
 
         panelGame = new PanelGame();
         panelGameForBot = new PanelGameForBot(); // Create the bot game panel
-
-
 
         // Add Menu and Game panels to the CardLayout
         mainPanel.add(menu, "Menu");
