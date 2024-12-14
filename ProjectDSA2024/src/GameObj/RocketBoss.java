@@ -12,18 +12,18 @@ import java.util.Objects;
 
 public class RocketBoss extends HealthBar{
     public RocketBoss(String imageLocation) {
-        super(new HealthPoints(100, 100));
+        super(new HealthPoints(1000, 1000));
         try {
             BufferedImage originalImage = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream(imageLocation)));
-            int newWidth = originalImage.getWidth() * 10;
-            int newHeight = originalImage.getHeight() * 10;
+            int newWidth = originalImage.getWidth() * 5;
+            int newHeight = originalImage.getHeight() * 5;
             BufferedImage scaledImage = new BufferedImage(newWidth, newHeight, BufferedImage.TYPE_INT_ARGB);
             scaledImage.getGraphics().drawImage(originalImage, 0, 0, newWidth, newHeight, null);
 
             this.image = scaledImage;
             Path2D p = new Path2D.Double();
-            p.moveTo(1,9); // Adjust starting point to match top left corner
-            p.lineTo(ROCKET_BOSS_SIZE -1 , 15); // Account for the tail section
+            p.moveTo(315,315); // Adjust starting point to match top left corner
+            p.lineTo(ROCKET_BOSS_SIZE -1 , 80); // Account for the tail section
             p.lineTo(ROCKET_BOSS_SIZE +10, ROCKET_BOSS_SIZE / 2); // Adjust endpoint slightly
             p.lineTo(ROCKET_BOSS_SIZE , ROCKET_BOSS_SIZE -10); // Account for the tail section
             p.lineTo(1, ROCKET_BOSS_SIZE-1); // Adjust endpoint to match bottom left corner
@@ -46,7 +46,7 @@ public class RocketBoss extends HealthBar{
 
     public void changeLocation(double x,double y){
         this.x = x;
-        this.y=y;
+        this.y= y;
     }
     public void update(){
         x+= Math.cos(Math.toRadians(angle)) * speed;
@@ -69,7 +69,7 @@ public class RocketBoss extends HealthBar{
         Shape shap = getShape();
         hpRender(g2, shap, y);
         g2.setTransform(oldTransform);
-        g2.setColor(Color.red);
+        g2.setColor(Color.black);
 //        g2.draw(shap);
         g2.draw(shap.getBounds2D());
     }
