@@ -67,7 +67,7 @@ public class Main extends JFrame {
         // Initialize the Menu and Game Panels
         ActionListener startGameListener = e -> switchToGamePanel();
         ActionListener botButtonListener = e -> switchToBotGamePanel();
-        menu = new Menu(startGameListener, botButtonListener, "/GameImage/background.jpg");
+        menu = new Menu(startGameListener, botButtonListener, "/GameImage/background.png");
 
         panelGame = new PanelGame();
         panelGameForBot = new PanelGameForBot(); // Create the bot game panel

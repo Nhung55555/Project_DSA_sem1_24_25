@@ -564,6 +564,7 @@ import java.awt.event.KeyEvent;
 import java.awt.geom.Area;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -1066,9 +1067,28 @@ public class PanelGame extends JPanel {
         }).start();
     }
 
+    private Image loadImage(String path) {
+        try {
+            URL resource = getClass().getResource(path); // Load image as resource
+            if (resource != null) {
+                return new ImageIcon(resource).getImage();
+            } else {
+                System.err.println("Image resource not found: " + path);
+                return null;
+            }
+        } catch (Exception e) {
+            System.err.println("Error loading image: " + e.getMessage());
+            return null;
+        }
+    }
     private void drawBackGround() {
-        g2.setColor(new Color(30, 30, 30));
-        g2.fillRect(0, 0, width, height);
+        Image backgroundImage = loadImage("/GameImage/game_background.png");
+        if (backgroundImage == null) {
+            System.err.println("Failed to load background image: " + "");
+        }
+        if(backgroundImage != null){
+            g2.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
+        }
     }
 
     private void drawGame() {
@@ -1108,9 +1128,9 @@ public class PanelGame extends JPanel {
                 boomEffect.draw(g2);
             }
        }
-        g2.setColor(Color.WHITE);
-        g2.setFont(getFont().deriveFont(Font.BOLD, 15f));
-        g2.drawString("Score : " + score, 10, 20);
+        g2.setColor(Color.RED);
+        g2.setFont(getFont().deriveFont(Font.BOLD, 35f));
+        g2.drawString("Score : " + score, 15, 40);
         if (!player.isAlive()) {
             String text = "GAME OVER";
             String textKey = "Press key enter to Continue ...";
