@@ -55,7 +55,7 @@ public class Bot extends HealthBar{
     public static final double BOT_SIZE = 64;
     private double x;
     private double y;
-    private final float MAX_SPEED = 6f;
+    private final float MAX_SPEED = 5f;
     private float speed = 0f;
     private float angle = 0f;
     private Area botShap;
@@ -69,22 +69,41 @@ public class Bot extends HealthBar{
         this.x = x;
         this.y = y;
     }
+//
+public void update() {
 
-    public void update() {
-        // Update position based on speed (vertical bouncing)
-        y += speed;
-
-        // Check for and adjust movement based on screen boundaries (bouncing effect)
-        if (y <= 0) {
-            y = screenHeight - BOT_SIZE; // Bounce to bottom
-            speed = Math.abs(speed); // Invert speed for bouncing effect
-        } else if (y + BOT_SIZE >= screenHeight) {
-            y =0; // Prevent moving out of bounds
-            speed = -Math.abs(speed); // Invert speed for bouncing effect
-        }
-
+    y += speed;
+    System.out.println("Y Position: " + y + ", Speed: " + speed);
+    // Check for and adjust movement based on screen boundaries
+    if (y <= 0) {
+        y = 0;
+//        speed = -speed; // Reverse the direction of movement
+        speed = 0;
+    } else if (y + BOT_SIZE >= screenHeight) {
+        y = screenHeight - BOT_SIZE;
+//        speed = -speed; // Reverse the direction of movement
+        speed = 0;
     }
-    public void moveUp() {
+}
+//public void moveUp() {
+//    if (y > 0) { // Allow upward movement only if not at the top boundary
+//        speed = -MAX_SPEED;
+//        System.out.println(speed);
+//    }
+//    else {
+//        speed = 0; // Stop movement if at the boundary
+//    }
+//}
+//
+//    public void moveDown() {
+//        if (y + BOT_SIZE < screenHeight) { // Allow downward movement only if not at the bottom boundary
+//            speed = MAX_SPEED;
+//        }
+//        else {
+//            speed = 0; // Stop movement if at the boundary
+//        }
+//    }
+        public void moveUp() {
         speedUp = false; // Not relevant here, but can be kept for consistency
         if (speed <= 0) {
             speed = -MAX_SPEED; // Negative speed for upwards movement
@@ -97,7 +116,9 @@ public class Bot extends HealthBar{
             speed = MAX_SPEED; // Positive speed for downwards movement
         }
     }
-
+    public void stopMoving(){
+        speed = 0;
+    }
     public void draw(Graphics2D g2){
         AffineTransform oldTransform = g2.getTransform();
         g2.translate(x,y);
@@ -137,14 +158,28 @@ public class Bot extends HealthBar{
             speed += 3f;
         }
     }
-    public void speedDown(){
-        speedUp = false;
-        if(speed <= 0){
-            speed =0;
-        } else{
-            speed -= 0.003f;
+//    public void speedDown(){
+//        speedUp = false;
+//        if(speed <= 0){
+//            speed =0;
+//        } else{
+//            speed -= 0.003f;
+//        }
+//    }
+public void speedDown() {
+    speedUp = false;
+    if (speed <= 0) {
+        speed = 0;
+    } else {
+        speed -= 0.5f; // Increased decrement to make slowing noticeable
+        if (speed < 1f) {
+            speed = 1f; // Maintain a minimum speed to avoid stalling
         }
     }
+    System.out.println("Speed: " + speed + ", Y: " + y);
+
+}
+
 
     public boolean isAlive(){
         return alive;

@@ -48,10 +48,12 @@ public class Rocket extends HealthBar{
     private double x;
     private double y;
     //chỉnh tốc độ
-    private final float speed = 5f;
+    private final float speed = 3f;
     private float angle = 0;
     private Image image;
     private Area rocketShap;
+    private boolean alive = true;
+
 
     public void changeLocation(double x,double y){
         this.x = x;
@@ -97,6 +99,12 @@ public class Rocket extends HealthBar{
         afx.translate(x,y);
         afx.rotate(Math.toRadians(angle), ROCKET_SIZE/2,ROCKET_SIZE/2);
         return new Area(afx.createTransformedShape(rocketShap));
+    }
+    public boolean isAlive(){
+        return alive;
+    }
+    public void setAlive(boolean alive){
+        this.alive = alive;
     }
 
     public boolean check(int width,int height){
