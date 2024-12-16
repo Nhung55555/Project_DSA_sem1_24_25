@@ -55,7 +55,7 @@ public class Bot extends HealthBar{
     public static final double BOT_SIZE = 64;
     private double x;
     private double y;
-    private final float MAX_SPEED = 5f;
+    private final float MAX_SPEED = 9f;
     private float speed = 0f;
     private float angle = 0f;
     private Area botShap;

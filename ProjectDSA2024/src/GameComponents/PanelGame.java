@@ -1039,17 +1039,7 @@ public class PanelGame extends JPanel {
                             bullets.remove(bullet);
                         }
                     }
-//                    for (int i = 0; i < rocketBullets.size(); i++) {
-//                        RocketBullets rocketbullet = rocketBullets.get(i);
-//                        if (rocketbullet != null) {
-//                            rocketbullet.update();
-//                            if (!rocketbullet.check(width, height)) {
-//                                rocketBullets.remove(rocketbullet);
-//                            }
-//                        } else {
-//                            rocketBullets.remove(rocketbullet);
-//                        }
-//                    }
+
                     for (int i = 0; i < boomEffects.size(); i++) {
                         Effects boomEffect = boomEffects.get(i);
                         if (boomEffect != null) {

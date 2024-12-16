@@ -11,7 +11,7 @@ import java.io.IOException;
 
 public class Rocket extends HealthBar{
     public Rocket() {
-          super(new HealthPoints(20, 20));
+          super(new HealthPoints(1000, 1000));
 //        this.image = new ImageIcon(getClass().getResource("/GameImage/rocket.png")).getImage();
 //        Path2D p = new Path2D.Double();
 //        p.moveTo(15,10);
@@ -48,7 +48,7 @@ public class Rocket extends HealthBar{
     private double x;
     private double y;
     //chỉnh tốc độ
-    private final float speed = 3f;
+    private final float speed = 9f;
     private float angle = 0;
     private Image image;
     private Area rocketShap;

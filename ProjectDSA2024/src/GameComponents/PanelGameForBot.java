@@ -17,6 +17,7 @@ import GameObj.sound.Sound;
 
 import static GameObj.Bot.BOT_SIZE;
 import static GameObj.Rocket.ROCKET_SIZE;
+import static GameObj.RocketBoss.ROCKET_BOSS_SIZE;
 
 public class PanelGameForBot extends JPanel{
 
@@ -96,7 +97,7 @@ public class PanelGameForBot extends JPanel{
 //        rocketBullets.add(0, rocketbullet);
     }
     private void addRocketPhase2(int locationIndexer){
-        int locationY = locationIndexer +450;
+        int locationY = locationIndexer +300;
         Rocket rocket = new Rocket();
         RocketBullets rocketbullet = new RocketBullets(width, locationY, 180, 5, 10);
         rocket.changeLocation(width, locationY);
@@ -171,6 +172,36 @@ public class PanelGameForBot extends JPanel{
         }
     }
 
+    private void checkBulletsBoss(Bullet bullet) {
+        for (int i = 0; i < bossrockets.size(); i++) {
+            RocketBoss rocket = bossrockets.get(i);
+            if (rocket != null) {
+                Area area = new Area(bullet.getShape());
+                area.intersect(rocket.getShape());
+                if (!area.isEmpty()) {
+                    boomEffects.add(new Effects(bullet.getCenterX(), bullet.getCenterY(), 6, 20, 320, 0.5f, new Color(255, 218, 52)));
+                    boomEffects.add(new Effects(bullet.getCenterX(), bullet.getCenterY(), 6, 20, 310, 0.15f, new Color(222, 89, 6)));
+                    boomEffects.add(new Effects(bullet.getCenterX(), bullet.getCenterY(), 6, 20, 220, 0.25f, new Color(255, 42, 4)));
+                    boomEffects.add(new Effects(bullet.getCenterX(), bullet.getCenterY(), 6, 20, 230, 0.7f, new Color(255, 245, 186)));
+                    if (!rocket.updateHealth(bullet.getSize())) {
+                        score += 100;
+                        bossrockets.remove(rocket);
+//                        sound.shoundDestroy();
+                        double x = rocket.getX() + ROCKET_BOSS_SIZE/2;
+                        double y = rocket.getY() + ROCKET_BOSS_SIZE/2;
+                        boomEffects.add(new Effects(x, y, 5, 15, 175, 0.25f, new Color(255, 38, 0)));
+                        boomEffects.add(new Effects(x, y, 5, 25, 175, 0.1f, new Color(255, 144, 144)));
+                        boomEffects.add(new Effects(x, y, 10, 12, 200, 0.3f, new Color(246, 227, 9)));
+                        boomEffects.add(new Effects(x, y, 10, 40, 200, 0.5f, new Color(168, 229, 111)));
+                        boomEffects.add(new Effects(x, y, 10, 25, 250, 0.2f, new Color(248, 196, 72)));
+                    } else {
+//                        sound.shoundHit();
+                    }
+                    bullets.remove(bullet);
+                }
+            }
+        }
+    }
 
     private void checkBot(RocketBoss rocket) {
         if (rocket != null) {
@@ -261,44 +292,45 @@ public class PanelGameForBot extends JPanel{
                     switch (phase) {
 
                         case 1 -> {
-                            System.out.println("Phase 1");
+//                            System.out.println("Phase 1");
+//                            for (int i = 0; i < 1; i++) {
+//                                addRocketPhase2(i * 63);
+//                            }
+//                            while (!rockets.isEmpty()) {
+//                                sleep(30);
+//                            }
+//                        sleep(500);
+                            System.out.println("Phase 2");
                             for (int i = 0; i < 1; i++) {
                                 addRocketPhase1(i * 63);
                             }
                             while (!rockets.isEmpty()) {
                                 sleep(30);
                             }
-                        sleep(500);
-                            System.out.println("Phase 2");
+                            System.out.println("Phase 3");
                             for (int i = 0; i < 1; i++) {
                                 addRocketPhase2(i * 63);
                             }
                             while (!rockets.isEmpty()) {
                                 sleep(30);
                             }
-                            System.out.println("Phase 3");
-                            for (int i = 0; i < 1; i++) {
-                                addRocketPhase3(i * 63);
-                            }
-                            while (!rockets.isEmpty()) {
-                                sleep(30);
-                            }
-                            System.out.println("Phase 4");
-                            for (int i = 0; i < 1; i++) {
-                                addRocketPhase4(i * 63);
-                            }
-                            while (!rockets.isEmpty()) {
-                                sleep(30);
-                            }
-                            System.out.println("Phase 5");
-                            for (int i = 0; i < 1; i++) {
-                                addRocketPhase5(i * 63);
-                            }
-                            while (!rockets.isEmpty()) {
-                                sleep(30);
-                            }
+//                            System.out.println("Phase 4");
+//                            for (int i = 0; i < 1; i++) {
+//                                addRocketPhase2(i * 63);
+//                            }
+//                            while (!rockets.isEmpty()) {
+//                                sleep(30);
+//                            }
+//                            System.out.println("Phase 5");
+//                            for (int i = 0; i < 1; i++) {
+//                                addRocketPhase2(i * 63);
+//                            }
+//                            while (!rockets.isEmpty()) {
+//                                sleep(30);
+//                            }
                         System.out.println("Boss Appeared!");
                         addBossRocketPhase(450);
+//                        addRocketPhase2(63);
                         while(!bossrockets.isEmpty()){
                             sleep(30);
                         }
@@ -319,112 +351,17 @@ public class PanelGameForBot extends JPanel{
         bot.reset();
     }
 
-
-
-
-//    private void initKeyboard() {
-//        key = new Key();
-//        requestFocus();
-//        new Thread(new Runnable() {
-//            @Override
-//            public void run() {
-//                float dangerDistance = 100.0f;  // Danger zone for dodging
-//                float shootingDistance = 1000.0f;  // Shooting range
-//                float safeOffset = 150.0f;  // Safe zone distance above or below rocket
-//
-//                Rocket currentTarget = null;  // Track the current target rocket
-//
-//                while (start) {
-//                    if (bot.isAlive()) {
-//                        bot.update();
-//
-//                        // Find the nearest rocket
-//                        Rocket nearestRocket = null;
-//                        double minDistance = Double.MAX_VALUE;
-//
-//                        for (Rocket rocket : rockets) {
-//                            if (rocket != null) {
-//                                double distance = Math.hypot(
-//                                        rocket.getX() - bot.getX(),
-//                                        rocket.getY() - bot.getY()
-//                                );
-//
-//                                if (distance < minDistance) {
-//                                    minDistance = distance;
-//                                    nearestRocket = rocket;
-//                                }
-//                            }
-//                        }
-//
-//                        // Assign the nearest rocket as the target if no target is set or the target is destroyed
-//                        if (currentTarget == null || !rockets.contains(currentTarget)) {
-//                            currentTarget = nearestRocket;
-//                        }
-//
-//                        // Bot logic: Dodge and shoot
-//                        if (currentTarget != null) {
-//                            float rocketY = (float) currentTarget.getY();
-//                            float botY = (float) bot.getY();
-//
-//                            // Move to the safe zone opposite the rocket
-//                            if (minDistance < dangerDistance) {
-//                                if (rocketY < botY && botY + BOT_SIZE < screenHeight - 10) {
-//                                    bot.moveDown();  // Move down if the rocket is above the bot
-//                                } else if (rocketY > botY && botY > 10) {
-//                                    bot.moveUp();  // Move up if the rocket is below the bot
-//                                }
-//                            } else if (minDistance < shootingDistance) {
-//                                // Stay in position above or below the rocket to shoot
-//                                if (botY > rocketY - safeOffset && botY > 10) {
-//                                    bot.moveUp();
-//                                } else if (botY < rocketY + safeOffset && botY + BOT_SIZE < screenHeight - 10) {
-//                                    bot.moveDown();
-//                                } else {
-//                                    bot.stopMoving();
-//                                }
-//
-//                                // Shoot at the rocket
-//                                bullets.add(0, new Bullet(bot.getX(), bot.getY(), bot.getAngle(), 5, 1f));
-//                            } else {
-//                                bot.stopMoving();  // Stop moving if no immediate threat
-//                            }
-//                        } else {
-//                            bot.stopMoving();  // No rockets in range
-//                        }
-//
-//                        // Update and remove rockets
-//                        for (int i = 0; i < rockets.size(); i++) {
-//                            Rocket rocket = rockets.get(i);
-//                            if (rocket != null) {
-//                                rocket.update();
-//                                if (!rocket.check(width, height)) {
-//                                    rockets.remove(rocket);
-//                                    currentTarget = null;  // Reset the target
-//                                }
-//                            }
-//                        }
-//
-//                        sleep(FPS);  // Maintain game loop speed
-//                    } else {
-//                        if (key.isKey_enter()) {
-//                            resetGameBot();  // Restart the game if the bot is dead
-//                        }
-//                    }
-//                }
-//            }
-//        }).start();
-//    }
-
-
-//xác định vị trí và ngắm bắn từng rocket
     private void initKeyboard() {
         key = new Key();
         requestFocus();
         new Thread(new Runnable() {
             @Override
             public void run() {
-                float safetyDistance = 100.0f; // Maintain this distance from the rocket in the x-axis
-                Rocket currentTarget = null; // Track the current target rocket
+                float safetyDistance = 100.0f; // Distance to maintain for shooting
+                float dangerDistance = 80.0f; // Distance to start dodging
+                float dodgeStep = 100.0f;     // How far the bot moves when dodging
+                Rocket currentTarget = null; // Current target rocket
+                RocketBoss currentBossTarget = null; // Current target rocket boss
 
                 while (start) {
                     if (bot.isAlive()) {
@@ -453,27 +390,74 @@ public class PanelGameForBot extends JPanel{
                             currentTarget = nearestRocket;
                         }
 
-                        // Bot logic: Move to align with the rocket's y-coordinate
                         if (currentTarget != null) {
+                            float rocketX = (float) currentTarget.getX();
                             float rocketY = (float) currentTarget.getY();
+                            float botX = (float) bot.getX();
                             float botY = (float) bot.getY();
 
-                            // Move up or down to align with the rocket's y-coordinate
-                            if (botY > rocketY) {
-                                bot.moveUp();
-                            } else if (botY < rocketY) {
-                                bot.moveDown();
-                            } else {
-                                bot.stopMoving(); // Stop when aligned with the rocket's y-coordinate
-                            }
+                            // Calculate the horizontal distance to the rocket
+                            double horizontalDistance = Math.abs(botX - rocketX);
 
-                            // Stay in place and shoot if within range and aligned
-                            if (Math.abs(bot.getX() - currentTarget.getX()) >= safetyDistance) {
-                                bullets.add(0, new Bullet(bot.getX(), bot.getY(), bot.getAngle(), 5, 1f));
+                            // If the rocket is too close, prioritize dodging
+                            if (horizontalDistance < dangerDistance) {
+                                // Dodge logic: Check if there is space above or below
+                                if (botY - dodgeStep > 0) { // Space above
+                                    bot.moveUp();
+                                } else if (botY + dodgeStep < height) { // Space below
+                                    bot.moveDown();
+                                } else {
+                                    bot.stopMoving(); // No space to dodge
+                                }
+                            } else {
+                                // Normal behavior: Align vertically with the rocket and shoot
+                                if (Math.abs(botY - rocketY) > 5.0f) { // Align vertically
+                                    if (botY > rocketY) {
+                                        bot.moveUp();
+                                    } else if (botY < rocketY) {
+                                        bot.moveDown();
+                                    }
+                                } else {
+                                    bot.stopMoving(); // Stop moving when aligned
+
+                                    // Shoot if at a safe distance
+                                    if (horizontalDistance >= safetyDistance) {
+                                        bullets.add(0, new Bullet(bot.getX(), bot.getY(), bot.getAngle(), 2, 1f));
+                                    }
+                                }
                             }
-                        } else {
-                            bot.stopMoving(); // No rocket target, allow free movement
                         }
+                        else {
+                            // If no regular rockets are left, focus on RocketBoss
+                            if (rockets.isEmpty() && !bossrockets.isEmpty()) {
+                                // Assign a RocketBoss as the target if not already assigned
+                                if (currentBossTarget == null || !bossrockets.contains(currentBossTarget)) {
+                                    currentBossTarget = bossrockets.get(0); // Take the first RocketBoss
+                                }
+
+                                if (currentBossTarget != null) {
+                                    float bossCenterX = (float) (currentBossTarget.getX() + ROCKET_BOSS_SIZE / 2);
+                                    float bossCenterY = (float) (currentBossTarget.getY() + ROCKET_BOSS_SIZE / 2);
+                                    float botY = (float) bot.getY();
+
+                                    // Align with the RocketBoss and shoot
+                                    if (Math.abs(botY - bossCenterY) > 5.0f) { // Align vertically
+                                        if (botY > bossCenterY) {
+                                            bot.moveUp();
+                                        } else if (botY < bossCenterY) {
+                                            bot.moveDown();
+                                        }
+                                    } else {
+                                        bot.stopMoving(); // Stop moving when aligned
+                                        bullets.add(0, new Bullet(bot.getX(), bot.getY(), bot.getAngle(), 3, 1f)); // Shoot at RocketBoss
+                                    }
+                                }
+
+                            } else {
+                                bot.stopMoving(); // No target, stop movement
+                            }
+                        }
+//
 
                         // Update and remove rockets
                         for (int i = 0; i < rockets.size(); i++) {
@@ -483,6 +467,19 @@ public class PanelGameForBot extends JPanel{
                                 if (!rocket.check(width, height)) {
                                     rockets.remove(rocket);
                                     currentTarget = null; // Reset the target when a rocket is removed
+                                }
+                            }
+                        }
+                        for (int i = 0; i < bossrockets.size(); i++) {
+                            RocketBoss rocketBoss = bossrockets.get(i);
+                            if (rocketBoss != null) {
+                                rocketBoss.update();
+                                if (!rocketBoss.check(width, height)) {
+                                    bossrockets.remove(rocketBoss);
+                                } else {
+                                    if (bot.isAlive()) {
+                                        checkBot(rocketBoss);
+                                    }
                                 }
                             }
                         }
@@ -497,13 +494,6 @@ public class PanelGameForBot extends JPanel{
             }
         }).start();
     }
-
-
-
-
-
-
-
     private void initBullets() {
         bullets = new ArrayList<>();
         new Thread(new Runnable() {
@@ -515,6 +505,8 @@ public class PanelGameForBot extends JPanel{
                         if (bullet != null) {
                             bullet.update();
                             checkBullets(bullet);
+                            checkBulletsBoss(bullet);
+
                             if (!bullet.check(width, height)) {
                                 bullets.remove(bullet);
                             }
