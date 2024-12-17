@@ -8,10 +8,8 @@ import java.awt.event.KeyEvent;
 import java.awt.geom.Area;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
-import java.util.LinkedList;
+import java.util.*;
 import java.util.List;
-import java.util.Random;
 
 import GameMain.Main;
 import GameObj.*;
@@ -19,6 +17,7 @@ import GameObj.sound.Sound;
 
 import static GameObj.Rocket.ROCKET_SIZE;
 import static GameObj.RocketBoss.ROCKET_BOSS_SIZE;
+import static GameObj.RocketForDodge.ROCKET_DODGE_SIZE;
 
 public class PanelGameForBot extends JPanel{
     //game
@@ -37,10 +36,13 @@ public class PanelGameForBot extends JPanel{
     private Bot bot;
     private List<Bullet> bullets;
     private List<Rocket> rockets;
+    private List<RocketForDodge> rocketForDodges;
     private List<RocketBoss> bossrockets;
     private List<Effects> boomEffects;
     private int score = 0;
     private int phase = 1;
+
+    private Stack<Rocket> rocketStack = new Stack<>();
 
     private Main mainFrame; // Reference to the Main class
 
@@ -92,49 +94,33 @@ public class PanelGameForBot extends JPanel{
         thread.start();
     }
 
-    private void addRocket() {
-        Random ran = new Random();
-
-        int locationY2 = ran.nextInt(height - 50) + 25;
-        Rocket rocket2 = new Rocket();
-        rocket2.changeLocation(width, locationY2);
-        rocket2.changeAngle(180);
-        rockets.add(rocket2);
-    }
+//    private void addRocket() {
+//        Random ran = new Random();
+//
+//        int locationY2 = ran.nextInt(height - 50) + 25;
+//        Rocket rocket2 = new Rocket();
+//        rocket2.changeLocation(width, locationY2);
+//        rocket2.changeAngle(180);
+//        rockets.add(rocket2);
+//    }
     private void addRocketPhase1(int locationIndexer){
         int locationY = locationIndexer +20;
-        Rocket rocket = new Rocket();
+        RocketForDodge rocket = new RocketForDodge();
         RocketBullets rocketbullet = new RocketBullets(width, locationY, 180, 5, 10);
         rocket.changeLocation(width, locationY);
         rocket.changeAngle(180);
         System.out.println(rocketbullet);
-        rockets.add(rocket);
+        rocketForDodges.add(rocket);
 //        rocketBullets.add(0, rocketbullet);
     }
-    private void addRocketPhaset(int locationY, int locationX) {
-        Rocket rocket = new Rocket();
-        RocketBullets rocketbullet = new RocketBullets(locationX, locationY, 180, 5, 10);
-
-        // Set the rocket's position and angle
-        rocket.changeLocation(locationX, locationY);
-        rocket.changeAngle(180);
-
-        // Debugging output
-        System.out.println("Added rocket at X: " + locationX + ", Y: " + locationY);
-
-        // Add to the list
-        rockets.add(rocket);
-        // rocketBullets.add(0, rocketbullet);  // Optional bullet
-    }
-
     private void addRocketPhase2(int locationIndexer){
         int locationY = locationIndexer +300;
-        Rocket rocket = new Rocket();
+        RocketForDodge rocket = new RocketForDodge();
         RocketBullets rocketbullet = new RocketBullets(width, locationY, 180, 5, 10);
         rocket.changeLocation(width, locationY);
         rocket.changeAngle(180);
         System.out.println(rocketbullet);
-        rockets.add(rocket);
+        rocketForDodges.add(rocket);
 //        rocketBullets.add(0, rocketbullet);
     }
 
@@ -147,6 +133,20 @@ public class PanelGameForBot extends JPanel{
         System.out.println(rocketbullet);
         rockets.add(rocket);
 //        rocketBullets.add(0, rocketbullet);
+    }
+    private void addRocketToStack(int locationY) {
+        Rocket rocket = new Rocket();
+        rocket.changeLocation(width, locationY);
+        rocket.changeAngle(180);
+        rocketStack.push(rocket); // Push the rocket onto the stack
+    }
+    private void launchRocketsFromStack() {
+        while (!rocketStack.isEmpty()) {
+            Rocket rocket = rocketStack.pop(); // Retrieve and remove the last rocket
+            rockets.add(rocket);
+            System.out.println("Launched Rocket from Stack at Y: " + rocket.getY());
+            sleep(30); // Add a delay to simulate rocket launch
+        }
     }
     private void addRocketPhase4(int locationIndexer){
         int locationY = locationIndexer +200;
@@ -190,6 +190,33 @@ public class PanelGameForBot extends JPanel{
 //                        sound.shoundDestroy();
                         double x = rocket.getX() + ROCKET_SIZE / 2;
                         double y = rocket.getY() + ROCKET_SIZE / 2;
+                        boomEffects.add(new Effects(x, y, 5, 5, 75, 0.05f, new Color(248, 140, 9)));
+                        boomEffects.add(new Effects(x, y, 5, 5, 75, 0.1f, new Color(255, 78, 78)));
+                        boomEffects.add(new Effects(x, y, 10, 10, 100, 0.3f, new Color(49, 234, 78)));
+                        boomEffects.add(new Effects(x, y, 10, 5, 100, 0.5f, new Color(126, 210, 84)));
+                        boomEffects.add(new Effects(x, y, 10, 5, 150, 0.2f, new Color(213, 227, 51)));
+                    } else {
+//                        sound.shoundHit();
+                    }
+                    bullets.remove(bullet);
+                }
+            }
+        }
+    }
+    private void checkBulletsDodge(Bullet bullet) {
+        for (int i = 0; i < rocketForDodges.size(); i++) {
+            RocketForDodge rocket = rocketForDodges.get(i);
+            if (rocket != null) {
+                Area area = new Area(bullet.getShape());
+                area.intersect(rocket.getShape());
+                if (!area.isEmpty()) {
+                    boomEffects.add(new Effects(bullet.getCenterX(), bullet.getCenterY(), 3, 5, 60, 0.5f, new Color(230, 207, 105)));
+                    if (!rocket.updateHealth(bullet.getSize())) {
+                        score++;
+                        rocketForDodges.remove(rocket);
+//                        sound.shoundDestroy();
+                        double x = rocket.getX() + ROCKET_DODGE_SIZE / 2;
+                        double y = rocket.getY() + ROCKET_DODGE_SIZE / 2;
                         boomEffects.add(new Effects(x, y, 5, 5, 75, 0.05f, new Color(248, 140, 9)));
                         boomEffects.add(new Effects(x, y, 5, 5, 75, 0.1f, new Color(255, 78, 78)));
                         boomEffects.add(new Effects(x, y, 10, 10, 100, 0.3f, new Color(49, 234, 78)));
@@ -312,7 +339,7 @@ public class PanelGameForBot extends JPanel{
         bot = new Bot(1366, 760);
         bot.changeLocation(150, 150);
         bossrockets = new ArrayList<>();
-
+        rocketForDodges = new ArrayList<>();
         rockets = new ArrayList<>();
         boomEffects = new ArrayList<>();
         new Thread(new Runnable() {
@@ -324,59 +351,72 @@ public class PanelGameForBot extends JPanel{
                     switch (phase) {
 
                         case 1 -> {
-                            addRocket();
-                            sleep(900);
-                            addRocket();
-                            sleep(900);
-                            addRocket();
-                            sleep(900);
-                            addRocket();
-                            sleep(900);
-                            addRocket();
-                            sleep(900);
-
-
-
-//                            System.out.println("Phase 1");
-//                            for (int i = 0; i < 1; i++) {
-//                                addRocketPhase2(i * 63);
-//                            }
-//                            while (!rockets.isEmpty()) {
-//                                sleep(30);
-//                            }
-//                        sleep(500);
+//                            addRocket();
+//                            sleep(900);
+//                            addRocket();
+//                            sleep(900);
+//                            addRocket();
+//                            sleep(900);
+//                            addRocket();
+//                            sleep(900);
+//                            addRocket();
+//                            sleep(900);
+//
 //                            System.out.println("Phase 2");
-//                            for (int i = 0; i < 5; i++) {
+//                            for (int i = 0; i < 1; i++) {
 //                                addRocketPhase1(i * 63);
 //                            }
 //                            while (!rockets.isEmpty()) {
 //                                sleep(30);
 //                            }
 //                            System.out.println("Phase 3");
-//                            for (int i = 0; i < 2; i++) {
-//                                addRocketPhase2(i * 63);
-//
-//                            }
-//
-
-                            while (!rockets.isEmpty()) {
-                                sleep(30);
-                            }
-//                            System.out.println("Phase 4");
 //                            for (int i = 0; i < 1; i++) {
 //                                addRocketPhase2(i * 63);
+//                            }
+//                            while (!rockets.isEmpty()) {
+//                                sleep(30);
+//                            }
+//                            System.out.println("Phase 4");
+//                            for (int i = 0; i < 1; i++) {
+//                                addRocketPhase3(i * 63);
 //                            }
 //                            while (!rockets.isEmpty()) {
 //                                sleep(30);
 //                            }
 //                            System.out.println("Phase 5");
 //                            for (int i = 0; i < 1; i++) {
-//                                addRocketPhase2(i * 63);
+//                                addRocketPhase4(i * 63);
 //                            }
 //                            while (!rockets.isEmpty()) {
 //                                sleep(30);
 //                            }
-                        System.out.println("Boss Appeared!");
+                            System.out.println("Phase 3");
+
+// Add rockets to the stack
+                            for (int i = 0; i < 5; i++) {
+                                addRocketToStack(i * 63 + 20);
+                            }
+
+// Launch rockets from the stack
+                            launchRocketsFromStack();
+                            while (!rockets.isEmpty()) {
+                                sleep(30);
+                            }
+                            System.out.println("Phase 2");
+                            for (int i = 0; i < 1; i++) {
+                                addRocketPhase1(i * 63);
+                            }
+                            while (!rocketForDodges.isEmpty()) {
+                                sleep(30);
+                            }
+                            System.out.println("Phase 3");
+                            for (int i = 0; i < 1; i++) {
+                                addRocketPhase2(i * 63);
+                            }
+                            while (!rocketForDodges.isEmpty()) {
+                                sleep(30);
+                            }
+                            System.out.println("Boss Appeared!");
                         addBossRocketPhase(450);
 //                        addRocketPhase2(63);
                         while(!bossrockets.isEmpty()){
@@ -406,10 +446,11 @@ public class PanelGameForBot extends JPanel{
             @Override
             public void run() {
                 float safetyDistance = 100.0f; // Distance to maintain for shooting
-                float dangerDistance = 80.0f; // Distance to start dodging
-                float dodgeStep = 100.0f;     // How far the bot moves when dodging
+                float dangerDistance = 100.0f; // Distance to start dodging
+                float dodgeStep = 50.0f;     // How far the bot moves when dodging
                 Rocket currentTarget = null; // Current target rocket
                 RocketBoss currentBossTarget = null; // Current target rocket boss
+                RocketForDodge currentRocket = null;
 
                 while (start) {
                     if (bot.isAlive()) {
@@ -434,10 +475,14 @@ public class PanelGameForBot extends JPanel{
 //                        }
 
                          Rocket nearestRocketDFS = findNearestRocketDFS(rockets, 0, null, Double.MAX_VALUE);
+                        RocketForDodge nearestRocketDodgeDFS = findNearestRocketDodgeDFS(rocketForDodges, 0, null, Double.MAX_VALUE);
 
                         // Assign the nearest rocket as the target if no target is set or the target is destroyed
                         if (currentTarget == null || !rockets.contains(currentTarget)) {
                             currentTarget = nearestRocketDFS;
+                        }
+                        if(currentRocket == null || !rocketForDodges.contains(currentRocket)){
+                            currentRocket = nearestRocketDodgeDFS;
                         }
 
                         if (currentTarget != null) {
@@ -477,9 +522,47 @@ public class PanelGameForBot extends JPanel{
                                 }
                             }
                         }
+                        else if (currentRocket != null) {
+                            float rocketX = (float) currentRocket.getX();
+                            float rocketY = (float) currentRocket.getY();
+                            float botX = (float) bot.getX();
+                            float botY = (float) bot.getY();
+
+                            // Calculate the horizontal distance to the rocket
+                            double horizontalDistance = Math.abs(botX - rocketX);
+
+                            // If the rocket is too close, prioritize dodging
+                            if (horizontalDistance < dangerDistance) {
+                                // Dodge logic: Check if there is space above or below
+                                if (botY - dodgeStep > 0) { // Space above
+                                    bot.moveUp();
+                                } else if (botY + dodgeStep < height) { // Space below
+                                    bot.moveDown();
+                                } else {
+                                    bot.stopMoving(); // No space to dodge
+                                }
+                            } else {
+                                // Normal behavior: Align vertically with the rocket and shoot
+                                if (Math.abs(botY - rocketY) > 5.0f) { // Align vertically
+                                    if (botY > rocketY) {
+                                        bot.moveUp();
+                                    } else if (botY < rocketY) {
+                                        bot.moveDown();
+                                    }
+                                } else {
+                                    bot.stopMoving(); // Stop moving when aligned
+
+                                    // Shoot if at a safe distance
+                                    if (horizontalDistance >= safetyDistance) {
+                                        bullets.add(0, new Bullet(bot.getX(), bot.getY(), bot.getAngle(), 2, 3f));
+                                    }
+                                }
+                            }
+                        }
+
                         else {
                             // If no regular rockets are left, focus on RocketBoss
-                            if (rockets.isEmpty() && !bossrockets.isEmpty()) {
+                            if (rockets.isEmpty() &&rocketForDodges.isEmpty() && !bossrockets.isEmpty()) {
                                 // Assign a RocketBoss as the target if not already assigned
                                 if (currentBossTarget == null || !bossrockets.contains(currentBossTarget)) {
                                     currentBossTarget = bossrockets.get(0); // Take the first RocketBoss
@@ -520,6 +603,17 @@ public class PanelGameForBot extends JPanel{
                                 }
                             }
                         }
+                        for (int i = 0; i < rocketForDodges.size(); i++) {
+                            RocketForDodge rocket = rocketForDodges.get(i);
+                            if (rocket != null) {
+                                rocket.update();
+                                if (!rocket.check(width, height)) {
+                                    rocketForDodges.remove(rocket);
+                                    currentRocket = null; // Reset the target when a rocket is removed
+                                }
+                            }
+                        }
+
                         for (int i = 0; i < bossrockets.size(); i++) {
                             RocketBoss rocketBoss = bossrockets.get(i);
                             if (rocketBoss != null) {
@@ -567,6 +661,24 @@ public class PanelGameForBot extends JPanel{
         // Recursive call for next rocket
         return findNearestRocketDFS(rockets, index + 1, nearestRocket, minDistance);
     }
+    private RocketForDodge findNearestRocketDodgeDFS(List<RocketForDodge> rocketForDodges, int index, RocketForDodge nearestRocketForDodge, double minDistance) {
+        if (index >= rocketForDodges.size()) return nearestRocketForDodge; // Base case
+
+        RocketForDodge currentRocket = rocketForDodges.get(index);
+        if (currentRocket != null) {
+            double distance = Math.hypot(
+                    currentRocket.getX() - bot.getX(),
+                    currentRocket.getY() - bot.getY()
+            );
+            if (distance < minDistance) {
+                nearestRocketForDodge = currentRocket;
+                minDistance = distance;
+            }
+        }
+
+        // Recursive call for next rocket
+        return findNearestRocketDodgeDFS(rocketForDodges, index + 1, nearestRocketForDodge, minDistance);
+    }
 
     private void initBullets() {
         bullets = new ArrayList<>();
@@ -579,6 +691,7 @@ public class PanelGameForBot extends JPanel{
                         if (bullet != null) {
                             bullet.update();
                             checkBullets(bullet);
+                            checkBulletsDodge(bullet);
                             checkBulletsBoss(bullet);
 
                             if (!bullet.check(width, height)) {
@@ -633,6 +746,13 @@ public class PanelGameForBot extends JPanel{
                     rocket.draw(g2);
                 }
             }
+        for (int i = 0; i < rocketForDodges.size(); i++) {
+            RocketForDodge rocket = rocketForDodges.get(i);
+            if (rocket != null) {
+                rocket.draw(g2);
+            }
+        }
+
 
             for (int i = 0; i < boomEffects.size(); i++) {
                 Effects boomEffect = boomEffects.get(i);
@@ -645,8 +765,8 @@ public class PanelGameForBot extends JPanel{
             g2.setFont(getFont().deriveFont(Font.BOLD, 15f));
             g2.drawString("Score : " + score, 10, 20);
 
-            if(bot.isAlive()&&rockets.isEmpty()){
-                sleep(32);
+            if(bot.isAlive()&&rockets.isEmpty()&&rocketForDodges.isEmpty()){
+                sleep(35);
                 if(bossrockets.isEmpty()){
                     String text = "WIN";
                     String textKey = "Press key enter to Continue ...";
