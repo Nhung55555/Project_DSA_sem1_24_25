@@ -125,7 +125,7 @@ public class PanelGameForBot extends JPanel{
     }
 
     private void addRocketPhase3(int locationIndexer){
-        int locationY = locationIndexer +100;
+        int locationY = locationIndexer +50;
         Rocket rocket = new Rocket();
         RocketBullets rocketbullet = new RocketBullets(width, locationY, 180, 5, 10);
         rocket.changeLocation(width, locationY);
@@ -134,20 +134,52 @@ public class PanelGameForBot extends JPanel{
         rockets.add(rocket);
 //        rocketBullets.add(0, rocketbullet);
     }
-    private void addRocketToStack(int locationY) {
-        Rocket rocket = new Rocket();
-        rocket.changeLocation(width, locationY);
-        rocket.changeAngle(180);
-        rocketStack.push(rocket); // Push the rocket onto the stack
-    }
+//    private void addRocketToStack(int locationY) {
+//        Rocket rocket = new Rocket();
+//        rocket.changeLocation(width, locationY);
+//        rocket.changeAngle(180);
+//        rocketStack.push(rocket); // Push the rocket onto the stack
+//    }
+//    private void launchRocketsFromStack() {
+//        while (!rocketStack.isEmpty()) {
+//            Rocket rocket = rocketStack.pop(); // Retrieve and remove the last rocket
+//            rockets.add(rocket);
+//            System.out.println("Launched Rocket from Stack at Y: " + rocket.getY());
+//            sleep(30); // Add a delay to simulate rocket launch
+//        }
+//    }
+private void addRocketToStack(int locationX, int locationY) {
+    Rocket rocket = new Rocket();
+    rocket.changeLocation(locationX, locationY); // Set both X and Y position
+    rocket.changeAngle(180); // Set the rocket's angle (flying to the left, for example)
+    rocketStack.push(rocket); // Push the rocket onto the stack
+}
+
     private void launchRocketsFromStack() {
         while (!rocketStack.isEmpty()) {
             Rocket rocket = rocketStack.pop(); // Retrieve and remove the last rocket
             rockets.add(rocket);
-            System.out.println("Launched Rocket from Stack at Y: " + rocket.getY());
+            System.out.println("Launched Rocket from Stack at X: " + rocket.getX() + ", Y: " + rocket.getY());
             sleep(30); // Add a delay to simulate rocket launch
+
+            // Optionally, you can also move the rocket along X and Y (e.g., to simulate motion).
+            moveRocket(rocket); // Call the move function to simulate rocket movement
         }
     }
+
+    // Function to move the rocket along X and Y
+    private void moveRocket(Rocket rocket) {
+        // You can modify these values based on how you want the rocket to move
+        double newX = rocket.getX() - 2; // Move left (decreasing X)
+        double newY = rocket.getY() - 1; // Move upward (decreasing Y)
+
+        // Update rocket's position
+        rocket.changeLocation(newX, newY);
+    }
+
+
+
+
     private void addRocketPhase4(int locationIndexer){
         int locationY = locationIndexer +200;
         Rocket rocket = new Rocket();
@@ -392,26 +424,35 @@ public class PanelGameForBot extends JPanel{
 //                            }
                             System.out.println("Phase 3");
 
-// Add rockets to the stack
-                            for (int i = 0; i < 5; i++) {
-                                addRocketToStack(i * 63 + 20);
-                            }
+                            System.out.println("Adding rockets with multiple X and Y positions...");
+                            int[] rocketXPositions = {1200,1100,1000,1200}; // X positions
+                            int[] rocketYPositions = { 100,300,405,650}; // Y positions
 
-// Launch rockets from the stack
+                            for (int i = 0; i < rocketXPositions.length; i++) {
+                                addRocketToStack(rocketXPositions[i], rocketYPositions[i]);
+                            }
                             launchRocketsFromStack();
+
                             while (!rockets.isEmpty()) {
                                 sleep(30);
                             }
-                            System.out.println("Phase 2");
+                            System.out.println("Phase 1");
                             for (int i = 0; i < 1; i++) {
                                 addRocketPhase1(i * 63);
                             }
                             while (!rocketForDodges.isEmpty()) {
                                 sleep(30);
                             }
-                            System.out.println("Phase 3");
+                            System.out.println("Phase 2");
                             for (int i = 0; i < 1; i++) {
                                 addRocketPhase2(i * 63);
+                            }
+                            while (!rocketForDodges.isEmpty()) {
+                                sleep(30);
+                            }
+                            System.out.println("Phase 3");
+                            for (int i = 0; i < 1; i++) {
+                                addRocketPhase3(i * 63);
                             }
                             while (!rocketForDodges.isEmpty()) {
                                 sleep(30);
@@ -475,14 +516,16 @@ public class PanelGameForBot extends JPanel{
 //                        }
 
                          Rocket nearestRocketDFS = findNearestRocketDFS(rockets, 0, null, Double.MAX_VALUE);
-                        RocketForDodge nearestRocketDodgeDFS = findNearestRocketDodgeDFS(rocketForDodges, 0, null, Double.MAX_VALUE);
+                        RocketForDodge nearestRocketDodgeBFS = findNearestRocketBFS();
+
+//                        RocketForDodge nearestRocketDodgeDFS = findNearestRocketDodgeDFS(rocketForDodges, 0, null, Double.MAX_VALUE);
 
                         // Assign the nearest rocket as the target if no target is set or the target is destroyed
                         if (currentTarget == null || !rockets.contains(currentTarget)) {
                             currentTarget = nearestRocketDFS;
                         }
                         if(currentRocket == null || !rocketForDodges.contains(currentRocket)){
-                            currentRocket = nearestRocketDodgeDFS;
+                            currentRocket = nearestRocketDodgeBFS;
                         }
 
                         if (currentTarget != null) {
@@ -517,7 +560,7 @@ public class PanelGameForBot extends JPanel{
 
                                     // Shoot if at a safe distance
                                     if (horizontalDistance >= safetyDistance) {
-                                        bullets.add(0, new Bullet(bot.getX(), bot.getY(), bot.getAngle(), 2, 3f));
+                                        bullets.add(0, new Bullet(bot.getX(), bot.getY(), bot.getAngle(), 2, 1f));
                                     }
                                 }
                             }
@@ -529,7 +572,7 @@ public class PanelGameForBot extends JPanel{
                             float botY = (float) bot.getY();
 
                             // Calculate the horizontal distance to the rocket
-                            double horizontalDistance = Math.abs(botX - rocketX);
+                            double horizontalDistance = Math.abs(botX - rocketX); //tính theo trục x trục ngang, cái nào gần hơn thì bắn trước
 
                             // If the rocket is too close, prioritize dodging
                             if (horizontalDistance < dangerDistance) {
@@ -661,24 +704,48 @@ public class PanelGameForBot extends JPanel{
         // Recursive call for next rocket
         return findNearestRocketDFS(rockets, index + 1, nearestRocket, minDistance);
     }
-    private RocketForDodge findNearestRocketDodgeDFS(List<RocketForDodge> rocketForDodges, int index, RocketForDodge nearestRocketForDodge, double minDistance) {
-        if (index >= rocketForDodges.size()) return nearestRocketForDodge; // Base case
+//    private RocketForDodge findNearestRocketDodgeDFS(List<RocketForDodge> rocketForDodges, int index, RocketForDodge nearestRocketForDodge, double minDistance) {
+//        if (index >= rocketForDodges.size()) return nearestRocketForDodge; // Base case
+//
+//        RocketForDodge currentRocket = rocketForDodges.get(index);
+//        if (currentRocket != null) {
+//            double distance = Math.hypot(
+//                    currentRocket.getX() - bot.getX(),
+//                    currentRocket.getY() - bot.getY()
+//            );
+//            if (distance < minDistance) {
+//                nearestRocketForDodge = currentRocket;
+//                minDistance = distance;
+//            }
+//        }
+//
+//        // Recursive call for next rocket
+//        return findNearestRocketDodgeDFS(rocketForDodges, index + 1, nearestRocketForDodge, minDistance);
+//    }
+private RocketForDodge findNearestRocketBFS() {
+    RocketForDodge nearestRocket = null;
+    double minDistance = Double.MAX_VALUE;
 
-        RocketForDodge currentRocket = rocketForDodges.get(index);
+    Queue<RocketForDodge> queue = new LinkedList<>(rocketForDodges);
+
+    while (!queue.isEmpty()) {
+        RocketForDodge currentRocket = queue.poll();
+
         if (currentRocket != null) {
             double distance = Math.hypot(
                     currentRocket.getX() - bot.getX(),
                     currentRocket.getY() - bot.getY()
             );
+
             if (distance < minDistance) {
-                nearestRocketForDodge = currentRocket;
                 minDistance = distance;
+                nearestRocket = currentRocket;
             }
         }
-
-        // Recursive call for next rocket
-        return findNearestRocketDodgeDFS(rocketForDodges, index + 1, nearestRocketForDodge, minDistance);
     }
+    return nearestRocket;
+}
+
 
     private void initBullets() {
         bullets = new ArrayList<>();

@@ -11,7 +11,7 @@ import java.io.IOException;
 
 public class Rocket extends HealthBar{
     public Rocket() {
-          super(new HealthPoints(10, 10));
+          super(new HealthPoints(20, 20));
         try {
             BufferedImage originalImage = ImageIO.read(getClass().getResourceAsStream("/GameImage/rocket.png"));
             int newWidth = originalImage.getWidth() * 2;
@@ -38,7 +38,7 @@ public class Rocket extends HealthBar{
     private double x;
     private double y;
     //chỉnh tốc độ
-    private final float speed = 10f;
+    private final float speed = 3f;
     private float angle = 0;
     private Image image;
     private Area rocketShap;
