@@ -645,9 +645,7 @@ public class PanelGame extends JPanel {
     private void addRocketPhase1(int locationIndexer){
         int locationY = locationIndexer;
         Rocket rocket = new Rocket();
-        RocketBullets rocketbullet = new RocketBullets(width-10 , locationY, 180, 5, 6);
-        rocket.changeLocation(width, locationY);
-        rocket.changeAngle(180);
+        RocketBullets rocketbullet = new RocketBullets(width-10 , locationY, 0, 5, 0.25fngle(180);
         System.out.println(rocketbullet);
         rockets.add(rocket);
         rocketBullets.add(rocketbullet);

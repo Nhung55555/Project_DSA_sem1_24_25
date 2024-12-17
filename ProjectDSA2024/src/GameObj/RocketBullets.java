@@ -21,7 +21,7 @@ public class RocketBullets {
         this.angle = angle;
         this.size = size;
         this.speed = speed;
-        shape = new Ellipse2D.Double(0, 0, 15, 3);
+        shape = new Ellipse2D.Double(0, 0, 64, 16);
     }
     public void update(){
         x+= Math.cos(Math.toRadians(angle)) * speed;
