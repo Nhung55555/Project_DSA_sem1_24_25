@@ -645,12 +645,12 @@ public class PanelGame extends JPanel {
     private void addRocketPhase1(int locationIndexer){
         int locationY = locationIndexer;
         Rocket rocket = new Rocket();
-        RocketBullets rocketbullet = new RocketBullets(width, locationY, 180, 5, 10);
+        RocketBullets rocketbullet = new RocketBullets(width-10 , locationY, 180, 5, 6);
         rocket.changeLocation(width, locationY);
         rocket.changeAngle(180);
         System.out.println(rocketbullet);
         rockets.add(rocket);
-        rocketBullets.add(0, rocketbullet);
+        rocketBullets.add(rocketbullet);
     }
     private void addBossRocketPhase(int locationIndexer){
         int locationY = locationIndexer;
@@ -719,29 +719,29 @@ public class PanelGame extends JPanel {
     }
 
 
-//    private void checkBulletRocket(RocketBullets bullet){
-//        if (player != null) {
-//            Area area = new Area(bullet.getShape());
-//            area.intersect(player.getShape());
-//            if (!area.isEmpty()) {
-//                boomEffects.add(new Effects(bullet.getCenterX(), bullet.getCenterY(), 3, 5, 60, 0.5f, new Color(239, 23, 23)));
-//                if (!player.updateHealth(bullet.getSize())) {
-//                    player.setAlive(false);
-//                    sound.shoundDestroy();
-//                    double x = player.getX() + Rocket.ROCKET_SIZE / 2;
-//                    double y = player.getY() + Rocket.ROCKET_SIZE / 2;
-//                    boomEffects.add(new Effects(x, y, 5, 5, 75, 0.05f, new Color(248, 9, 144)));
-//                    boomEffects.add(new Effects(x, y, 5, 5, 75, 0.1f, new Color(175, 78, 255)));
-//                    boomEffects.add(new Effects(x, y, 10, 10, 100, 0.3f, new Color(49, 234, 163)));
-//                    boomEffects.add(new Effects(x, y, 10, 5, 100, 0.5f, new Color(222, 239, 148)));
-//                    boomEffects.add(new Effects(x, y, 10, 5, 150, 0.2f, new Color(218, 122, 26)));
-//                } else {
-//                    sound.shoundHit();
-//                }
-//                rocketBullets.remove(bullet);
-//            }
-//        }
-//    }
+    private void checkBulletRocket(RocketBullets bullet){
+        if (player != null) {
+            Area area = new Area(bullet.getShape());
+            area.intersect(player.getShape());
+            if (!area.isEmpty()) {
+                boomEffects.add(new Effects(bullet.getCenterX(), bullet.getCenterY(), 3, 5, 60, 0.5f, new Color(239, 23, 23)));
+                if (!player.updateHealth(bullet.getSize())) {
+                    player.setAlive(false);
+                    sound.shoundDestroy();
+                    double x = player.getX() + Rocket.ROCKET_SIZE / 2;
+                    double y = player.getY() + Rocket.ROCKET_SIZE / 2;
+                    boomEffects.add(new Effects(x, y, 5, 5, 75, 0.05f, new Color(248, 9, 144)));
+                    boomEffects.add(new Effects(x, y, 5, 5, 75, 0.1f, new Color(175, 78, 255)));
+                    boomEffects.add(new Effects(x, y, 10, 10, 100, 0.3f, new Color(49, 234, 163)));
+                    boomEffects.add(new Effects(x, y, 10, 5, 100, 0.5f, new Color(222, 239, 148)));
+                    boomEffects.add(new Effects(x, y, 10, 5, 150, 0.2f, new Color(218, 122, 26)));
+                } else {
+                    sound.shoundHit();
+                }
+                rocketBullets.remove(bullet);
+            }
+        }
+    }
     
 
     private void checkPlayer(Rocket rocket) {
@@ -824,7 +824,6 @@ public class PanelGame extends JPanel {
         rockets = new ArrayList<>();
         bullets = new ArrayList<>();
         bossrockets = new ArrayList<>();
-        rocketBullets = new ArrayList<>();
         boomEffects = new ArrayList<>();
         new Thread(new Runnable() {
             @Override
@@ -1022,6 +1021,7 @@ public class PanelGame extends JPanel {
 
     private void initBullets() {
         bullets = new ArrayList<>();
+        rocketBullets = new ArrayList<>();
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -1039,7 +1039,18 @@ public class PanelGame extends JPanel {
                             bullets.remove(bullet);
                         }
                     }
-
+                    for (int i = 0; i < rocketBullets.size(); i++) {
+                        RocketBullets rocketbullet = rocketBullets.get(i);
+                        if (rocketbullet != null) {
+                            rocketbullet.update();
+                            checkBulletRocket(rocketbullet);
+                            if (!rocketbullet.check(width, height)) {
+                                rocketBullets.remove(rocketbullet);
+                            }
+                        } else {
+                            rocketBullets.remove(rocketbullet);
+                        }
+                    }
                     for (int i = 0; i < boomEffects.size(); i++) {
                         Effects boomEffect = boomEffects.get(i);
                         if (boomEffect != null) {
