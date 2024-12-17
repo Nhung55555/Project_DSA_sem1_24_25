@@ -12,7 +12,7 @@ import java.util.Objects;
 
 public class RocketBoss extends HealthBar{
     public RocketBoss(String imageLocation) {
-        super(new HealthPoints(100, 100));
+        super(new HealthPoints(20, 20));
         try {
             BufferedImage originalImage = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream(imageLocation)));
             int newWidth = originalImage.getWidth() * 2;
@@ -50,6 +50,8 @@ public class RocketBoss extends HealthBar{
     private float angle = 0;
     private Image image;
     private Area rocketShap;
+    private boolean alive = true;
+
 
     public void changeLocation(double x,double y){
         this.x = x;
@@ -106,6 +108,7 @@ public class RocketBoss extends HealthBar{
         Rectangle size = getShape().getBounds();
         return !(x <= -size.getWidth()) && !(y < -size.getHeight()) && !(x > width) && !(y > height);
     }
+
 }
 
 
