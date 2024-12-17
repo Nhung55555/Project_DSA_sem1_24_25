@@ -11,17 +11,7 @@ import java.io.IOException;
 
 public class Rocket extends HealthBar{
     public Rocket() {
-          super(new HealthPoints(1000, 1000));
-//        this.image = new ImageIcon(getClass().getResource("/GameImage/rocket.png")).getImage();
-//        Path2D p = new Path2D.Double();
-//        p.moveTo(15,10);
-//        p.lineTo(ROCKET_SIZE-5,13);
-//        p.lineTo(ROCKET_SIZE+10, ROCKET_SIZE/2);
-//        p.lineTo(ROCKET_SIZE-5, ROCKET_SIZE-13);
-//        p.lineTo(15, ROCKET_SIZE-10);
-//        rocketShap = new Area(p);
-//    }
-
+          super(new HealthPoints(20, 20));
         try {
             BufferedImage originalImage = ImageIO.read(getClass().getResourceAsStream("/GameImage/rocket.png"));
             int newWidth = originalImage.getWidth() * 2;
@@ -48,7 +38,7 @@ public class Rocket extends HealthBar{
     private double x;
     private double y;
     //chỉnh tốc độ
-    private final float speed = 9f;
+    private final float speed = 3f;
     private float angle = 0;
     private Image image;
     private Area rocketShap;
@@ -100,12 +90,7 @@ public class Rocket extends HealthBar{
         afx.rotate(Math.toRadians(angle), ROCKET_SIZE/2,ROCKET_SIZE/2);
         return new Area(afx.createTransformedShape(rocketShap));
     }
-    public boolean isAlive(){
-        return alive;
-    }
-    public void setAlive(boolean alive){
-        this.alive = alive;
-    }
+
 
     public boolean check(int width,int height){
         Rectangle size = getShape().getBounds();

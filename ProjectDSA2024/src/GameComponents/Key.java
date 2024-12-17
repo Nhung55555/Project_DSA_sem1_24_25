@@ -53,25 +53,16 @@ public class Key {
     private boolean key_space;
     private boolean key_j;
     private boolean key_k;
+
+    public boolean isKey_pause() {
+        return key_pause;
+    }
+
+    public void setKey_pause(boolean key_pause) {
+        this.key_pause = key_pause;
+    }
+
     private boolean key_enter;
-
-    public boolean isKey_n() {
-        return key_n;
-    }
-
-    public void setKey_n(boolean key_n) {
-        this.key_n = key_n;
-    }
-
-    public boolean isKey_m() {
-        return key_m;
-    }
-
-    public void setKey_m(boolean key_m) {
-        this.key_m = key_m;
-    }
-
-    private boolean key_n;
-    private boolean key_m;
+    private boolean key_pause;
 
 }

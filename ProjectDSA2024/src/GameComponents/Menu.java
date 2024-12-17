@@ -69,9 +69,10 @@ public class Menu extends JPanel {
     private JButton startButton;
     private JButton quitButton;
     private JButton botButton;
+    private JButton dumbbotButton;
     private final Image backgroundImage;
 
-    public Menu(ActionListener startGameListener, ActionListener botButtonListener, String backgroundImagePath) {
+    public Menu(ActionListener startGameListener, ActionListener botButtonListener, ActionListener DumbbotButtonListener, String backgroundImagePath) {
         setLayout(new BorderLayout());
 
         // Load the background image
@@ -100,6 +101,15 @@ public class Menu extends JPanel {
         botButton.addActionListener(botButtonListener);
         buttonPanel.add(botButton);
         buttonPanel.add(Box.createRigidArea(new Dimension(0, 10))); // Add spacing
+
+        //Create the dumb bot button
+        dumbbotButton = new JButton("Bot dumb");
+        dumbbotButton.setPreferredSize(buttonSize);
+        dumbbotButton.setMaximumSize(buttonSize);
+        dumbbotButton.addActionListener(DumbbotButtonListener);
+        buttonPanel.add(dumbbotButton);
+        buttonPanel.add(Box.createRigidArea(new Dimension(0, 10))); // Add sp
+
 
         // Create the quit button
         quitButton = new JButton("Quit Game");
