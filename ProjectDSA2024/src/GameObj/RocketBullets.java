@@ -9,7 +9,7 @@ public class RocketBullets {
     private double x;
     private double y;
     private final Shape shape;
-    private final Color color = new Color(255,255,255);
+    private final Color color = new Color(255, 14, 14);
     private final float angle;
     private double size;
     private float speed = 1f;
@@ -21,11 +21,11 @@ public class RocketBullets {
         this.angle = angle;
         this.size = size;
         this.speed = speed;
-        shape = new Ellipse2D.Double(0, 0, 64, 16);
+        shape = new Ellipse2D.Double(0, 0, 16, 16);
     }
+
     public void update(){
         x+= Math.cos(Math.toRadians(angle)) * speed;
-        y+= Math.sin(Math.toRadians(angle)) * speed;
     }
     public boolean check(int width, int height){
         if(x<= -size || y< -size || x > width || y > height){
