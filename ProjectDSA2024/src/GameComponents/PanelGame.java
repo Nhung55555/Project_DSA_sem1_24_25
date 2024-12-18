@@ -645,8 +645,11 @@ public class PanelGame extends JPanel {
     private void addRocketPhase1(int locationIndexer){
         int locationY = locationIndexer;
         Rocket rocket = new Rocket();
-        RocketBullets rocketbullet = new RocketBullets(width-10 , locationY, 0, 5, 0.25fngle(180);
-        System.out.println(rocketbullet);
+        RocketBullets rocketbullet = new RocketBullets(width-10 , locationY, 0, 30, 1f);
+        rocket.changeLocation(width, locationY);
+        rocket.changeAngle(180);
+        System.out.println(rocketbullet.getX());
+        System.out.println(rocketbullet.getY());
         rockets.add(rocket);
         rocketBullets.add(rocketbullet);
     }
@@ -816,11 +819,11 @@ public class PanelGame extends JPanel {
 
     private void intitObjectGame() {
         sound = new Sound();
-
         player = new Player(1366, 750);
         player.changeLocation(150, 350);
         rockets = new ArrayList<>();
         bullets = new ArrayList<>();
+        rocketBullets = new ArrayList<>();
         bossrockets = new ArrayList<>();
         boomEffects = new ArrayList<>();
         new Thread(new Runnable() {
@@ -829,46 +832,46 @@ public class PanelGame extends JPanel {
                 while (start) {
                     switch (phase) {
                         case 1 -> {
-                            System.out.println("Phase 1");
-                            for (int i = 0; i < 2; i++) {
-                                addRocketPhase1(i * 63);
-                            }
-                            while(!rockets.isEmpty()){
-                                sleep(10);
-                            }
-                            sleep(500);
-                            System.out.println("Boss Appeared!");
-                            addBossRocketPhase(450);
-                            while(!bossrockets.isEmpty()){
-                                sleep(10);
-                            }
-                            phase ++;
-                            sleep(2000);
 //                            System.out.println("Phase 1");
-//                            addRocketPhase1(335);
-//                            if(rockets.isEmpty()){
-//                                phase++;
-//                            }
-//                            sleep(900);
-//                            addRocketPhase1(167);
-//                            addRocketPhase1(501);
-//                            sleep(1200);
-//                            for (int i = 0; i < 4; i++) {
-//                                addRocketPhase1(i * 175 + 85);
-//                            }
-//                            sleep(1200);
-//                            for (int i = 0; i < 12; i++) {
+//                            for (int i = 0; i < 2; i++) {
 //                                addRocketPhase1(i * 63);
 //                            }
-//                            sleep(1200);
-//                            for (int i = 0; i < 5; i++) {
-//                                addRocketPhase1(i * 160);
+//                            while(!rockets.isEmpty()){
+//                                sleep(10);
 //                            }
-//                            sleep(1200);
-//                            for (int i = 0; i < 10; i++) {
-//                                addRocketPhase1(i * 73 + 25);
+//                            sleep(500);
+//                            System.out.println("Boss Appeared!");
+//                            addBossRocketPhase(450);
+//                            while(!bossrockets.isEmpty()){
+//                                sleep(10);
 //                            }
-//                            sleep(1000);
+//                            phase ++;
+//                            sleep(2000);
+                            System.out.println("Phase 1");
+                            addRocketPhase1(335);
+                            if(rockets.isEmpty()){
+                                phase++;
+                            }
+                            sleep(900);
+                            addRocketPhase1(167);
+                            addRocketPhase1(501);
+                            sleep(1200);
+                            for (int i = 0; i < 4; i++) {
+                                addRocketPhase1(i * 175 + 85);
+                            }
+                            sleep(1200);
+                            for (int i = 0; i < 12; i++) {
+                                addRocketPhase1(i * 63);
+                            }
+                            sleep(1200);
+                            for (int i = 0; i < 5; i++) {
+                                addRocketPhase1(i * 160);
+                            }
+                            sleep(1200);
+                            for (int i = 0; i < 10; i++) {
+                                addRocketPhase1(i * 73 + 25);
+                            }
+                            sleep(1000);
                         }
                         case 2 -> {
                             System.out.println("Phase 2");
