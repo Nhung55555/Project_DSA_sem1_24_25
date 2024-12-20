@@ -645,7 +645,9 @@ public class PanelGame extends JPanel {
     private void addRocketPhase1(int locationIndexer){
         int locationY = locationIndexer;
         Rocket rocket = new Rocket();
-        RocketBullets rocketbullet = new RocketBullets(width-10 , locationY, 180, 30, 0.5f);
+        double shotDistanceAngle = Math.abs(player.getY()-locationIndexer) / Math.abs(player.getX() - width);
+        float angle = (float) Math.toDegrees(Math.atan(shotDistanceAngle));
+        RocketBullets rocketbullet = new RocketBullets(width-10 , locationY, 180 + angle , 30, 0.5f);
         rocket.changeLocation(width, locationY);
         rocket.changeAngle(180);
         System.out.println(rocketbullet.getX());
@@ -830,23 +832,25 @@ public class PanelGame extends JPanel {
             @Override
             public void run() {
                 while (start) {
-                    switch (phase) {
-                        case 1 -> {
-                            System.out.println("Phase 1");
-                            for (int i = 0; i < 2; i++) {
-                                addRocketPhase1(i * 63);
-                            }
-                            while(!rockets.isEmpty()){
-                                sleep(10);
-                            }
-                            sleep(500);
-                            System.out.println("Boss Appeared!");
-                            addBossRocketPhase(450);
-                            while(!bossrockets.isEmpty()){
-                                sleep(10);
-                            }
-                            phase ++;
-                            sleep(2000);
+//                    switch (phase) {
+//                        case 1 -> {
+//                            addRocketPhase1(501);
+//                            sleep(12000);
+//                            System.out.println("Phase 1");
+//                            for (int i = 0; i < 2; i++) {
+//                                addRocketPhase1(i * 63);
+//                            }
+//                            while(!rockets.isEmpty()){
+//                                sleep(10);
+//                            }
+//                            sleep(500);
+//                            System.out.println("Boss Appeared!");
+//                            addBossRocketPhase(450);
+//                            while(!bossrockets.isEmpty()){
+//                                sleep(10);
+//                            }
+//                            phase ++;
+//                            sleep(2000);
 //                            System.out.println("Phase 1");
 //                            addRocketPhase1(335);
 //                            if(rockets.isEmpty()){
@@ -872,20 +876,20 @@ public class PanelGame extends JPanel {
 //                                addRocketPhase1(i * 73 + 25);
 //                            }
 //                            sleep(1000);
-                        }
-                        case 2 -> {
-                            System.out.println("Phase 2");
-                            for (int i = 0; i < 5; i++) {
-                                addRocketPhase1(i * 50);
-                            }
-                            sleep(13000);
-                            phase++;
-                        }
-                        default -> {
-                            addRocket();
-                            sleep(1900);
-                        }
-                    }
+//                        }
+//                        case 2 -> {
+//                            System.out.println("Phase 2");
+//                            for (int i = 0; i < 5; i++) {
+//                                addRocketPhase1(i * 50);
+//                            }
+//                            sleep(13000);
+//                            phase++;
+//                        }
+//                        default -> {
+//                            addRocket();
+//                            sleep(1900);
+//                        }
+//                    }
                 }
             }
         }).start();
@@ -984,7 +988,7 @@ public class PanelGame extends JPanel {
                         player.update();
                         player.changeAngle(angle);
                     } else {
-                        if (key.isKey_enter()) {
+                        if (!player.isAlive() && key.isKey_enter()) {
                             resetGame();
                         }
                     }
@@ -1136,7 +1140,7 @@ public class PanelGame extends JPanel {
         g2.drawString("Score : " + score, 15, 40);
         if (!player.isAlive()) {
             String text = "GAME OVER";
-            String textKey = "Press key enter to Continue ...";
+            String textKey = "Press key enter to Continue ... Or press ESC to Quit to Main Menu";
             g2.setFont(getFont().deriveFont(Font.BOLD, 50f));
             FontMetrics fm = g2.getFontMetrics();
             Rectangle2D r2 = fm.getStringBounds(text, g2);

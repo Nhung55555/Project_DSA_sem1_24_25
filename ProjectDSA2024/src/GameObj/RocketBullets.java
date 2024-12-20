@@ -26,6 +26,7 @@ public class RocketBullets {
 
     public void update(){
         x+= Math.cos(Math.toRadians(angle)) * speed;
+        y+= Math.sin(Math.toRadians(angle)) * speed;
     }
     public boolean check(int width, int height){
         if(x<= -size || y< -size || x > width || y > height){

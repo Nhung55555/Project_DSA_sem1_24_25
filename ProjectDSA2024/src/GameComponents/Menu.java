@@ -61,6 +61,8 @@
 package GameComponents;
 
 import javax.swing.*;
+import javax.swing.plaf.PanelUI;
+import javax.swing.plaf.basic.BasicPanelUI;
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.net.URL;
@@ -93,6 +95,7 @@ public class Menu extends JPanel {
         startButton.addActionListener(startGameListener);
         buttonPanel.add(startButton);
         buttonPanel.add(Box.createRigidArea(new Dimension(0, 10))); // Add spacing
+        PanelUI panelui = new BasicPanelUI();
 
         // Create the bot button
         botButton = new JButton("Bot 1");
