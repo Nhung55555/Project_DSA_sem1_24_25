@@ -101,7 +101,8 @@ public class Player extends HealthBar{
         AffineTransform oldTransform = g2.getTransform();
         g2.translate(x,y);
         AffineTransform tran = new AffineTransform();
-        tran.rotate(Math.toRadians(angle-90), PLAYER_SIZE/2, PLAYER_SIZE/2);
+        tran.rotate(Math.toRadians(angle-90),
+                PLAYER_SIZE/2, PLAYER_SIZE/2);
         g2.drawImage(speedUp ? image_speed : image, tran, null);
 
         hpRender(g2,getShape(),y);
@@ -115,7 +116,8 @@ public class Player extends HealthBar{
     public Area getShape(){
         AffineTransform afx = new AffineTransform();
         afx.translate(x,y);
-        afx.rotate(Math.toRadians(angle-90), PLAYER_SIZE/2,PLAYER_SIZE/2);
+        afx.rotate(Math.toRadians(angle-90),
+                PLAYER_SIZE/2,PLAYER_SIZE/2);
         return new Area(afx.createTransformedShape(playerShap));
     }
 

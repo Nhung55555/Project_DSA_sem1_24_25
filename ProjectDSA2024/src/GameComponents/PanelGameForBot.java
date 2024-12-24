@@ -111,7 +111,6 @@ public class PanelGameForBot extends JPanel{
         rocket.changeAngle(180);
         System.out.println(rocketbullet);
         rocketForDodges.add(rocket);
-//        rocketBullets.add(0, rocketbullet);
     }
     private void addRocketPhase2(int locationIndexer){
         int locationY = locationIndexer +300;
@@ -121,7 +120,6 @@ public class PanelGameForBot extends JPanel{
         rocket.changeAngle(180);
         System.out.println(rocketbullet);
         rocketForDodges.add(rocket);
-//        rocketBullets.add(0, rocketbullet);
     }
 
     private void addRocketPhase3(int locationIndexer){
@@ -154,30 +152,21 @@ private void addRocketToStack(int locationX, int locationY) {
     rocket.changeAngle(180); // Set the rocket's angle (flying to the left, for example)
     rocketStack.push(rocket); // Push the rocket onto the stack
 }
-
     private void launchRocketsFromStack() {
         while (!rocketStack.isEmpty()) {
             Rocket rocket = rocketStack.pop(); // Retrieve and remove the last rocket
             rockets.add(rocket);
             System.out.println("Launched Rocket from Stack at X: " + rocket.getX() + ", Y: " + rocket.getY());
             sleep(30); // Add a delay to simulate rocket launch
-
-            // Optionally, you can also move the rocket along X and Y (e.g., to simulate motion).
-            moveRocket(rocket); // Call the move function to simulate rocket movement
         }
     }
-
     // Function to move the rocket along X and Y
-    private void moveRocket(Rocket rocket) {
-        // You can modify these values based on how you want the rocket to move
-        double newX = rocket.getX() - 2; // Move left (decreasing X)
-        double newY = rocket.getY() - 1; // Move upward (decreasing Y)
-
-        // Update rocket's position
-        rocket.changeLocation(newX, newY);
-    }
-
-
+//    private void moveRocket(Rocket rocket) {
+//        double newX = rocket.getX() - 2; // Move left (decreasing X)
+//        double newY = rocket.getY() - 1; // Move upward (decreasing Y)
+//        // Update rocket's position
+//        rocket.changeLocation(newX, newY);
+//    }
 
 
     private void addRocketPhase4(int locationIndexer){
@@ -432,7 +421,6 @@ private void addRocketToStack(int locationX, int locationY) {
                                 addRocketToStack(rocketXPositions[i], rocketYPositions[i]);
                             }
                             launchRocketsFromStack();
-
                             while (!rockets.isEmpty()) {
                                 sleep(30);
                             }
@@ -454,7 +442,7 @@ private void addRocketToStack(int locationX, int locationY) {
                             for (int i = 0; i < 1; i++) {
                                 addRocketPhase3(i * 63);
                             }
-                            while (!rocketForDodges.isEmpty()) {
+                            while (!rockets.isEmpty()) {
                                 sleep(30);
                             }
                             System.out.println("Boss Appeared!");
@@ -496,30 +484,8 @@ private void addRocketToStack(int locationX, int locationY) {
                 while (start) {
                     if (bot.isAlive()) {
                         bot.update();
-
-                        // Find the nearest rocket
-//                        Rocket nearestRocket = null;
-//                        double minDistance = Double.MAX_VALUE;
-//
-//                        for (Rocket rocket : rockets) {
-//                            if (rocket != null) {
-//                                double distance = Math.hypot(
-//                                        rocket.getX() - bot.getX(),
-//                                        rocket.getY() - bot.getY()
-//                                );
-//
-//                                if (distance < minDistance) {
-//                                    minDistance = distance;
-//                                    nearestRocket = rocket;
-//                                }
-//                            }
-//                        }
-
-                         Rocket nearestRocketDFS = findNearestRocketDFS(rockets, 0, null, Double.MAX_VALUE);
+                        Rocket nearestRocketDFS = findNearestRocketDFS(rockets, 0, null, Double.MAX_VALUE);
                         RocketForDodge nearestRocketDodgeBFS = findNearestRocketBFS();
-
-//                        RocketForDodge nearestRocketDodgeDFS = findNearestRocketDodgeDFS(rocketForDodges, 0, null, Double.MAX_VALUE);
-
                         // Assign the nearest rocket as the target if no target is set or the target is destroyed
                         if (currentTarget == null || !rockets.contains(currentTarget)) {
                             currentTarget = nearestRocketDFS;
@@ -527,16 +493,13 @@ private void addRocketToStack(int locationX, int locationY) {
                         if(currentRocket == null || !rocketForDodges.contains(currentRocket)){
                             currentRocket = nearestRocketDodgeBFS;
                         }
-
                         if (currentTarget != null) {
                             float rocketX = (float) currentTarget.getX();
                             float rocketY = (float) currentTarget.getY();
                             float botX = (float) bot.getX();
                             float botY = (float) bot.getY();
-
                             // Calculate the horizontal distance to the rocket
                             double horizontalDistance = Math.abs(botX - rocketX);
-
                             // If the rocket is too close, prioritize dodging
                             if (horizontalDistance < dangerDistance) {
                                 // Dodge logic: Check if there is space above or below
@@ -545,8 +508,7 @@ private void addRocketToStack(int locationX, int locationY) {
                                 } else if (botY + dodgeStep < height) { // Space below
                                     bot.moveDown();
                                 } else {
-                                    bot.stopMoving(); // No space to dodge
-                                }
+                                    bot.stopMoving();}
                             } else {
                                 // Normal behavior: Align vertically with the rocket and shoot
                                 if (Math.abs(botY - rocketY) > 5.0f) { // Align vertically
@@ -557,10 +519,9 @@ private void addRocketToStack(int locationX, int locationY) {
                                     }
                                 } else {
                                     bot.stopMoving(); // Stop moving when aligned
-
                                     // Shoot if at a safe distance
                                     if (horizontalDistance >= safetyDistance) {
-                                        bullets.add(0, new Bullet(bot.getX(), bot.getY(), bot.getAngle(), 2, 1f));
+                                        bullets.add(0, new Bullet(bot.getX(), bot.getY(), bot.getAngle(), 2, 3f));
                                     }
                                 }
                             }
@@ -570,10 +531,8 @@ private void addRocketToStack(int locationX, int locationY) {
                             float rocketY = (float) currentRocket.getY();
                             float botX = (float) bot.getX();
                             float botY = (float) bot.getY();
-
                             // Calculate the horizontal distance to the rocket
                             double horizontalDistance = Math.abs(botX - rocketX); //tính theo trục x trục ngang, cái nào gần hơn thì bắn trước
-
                             // If the rocket is too close, prioritize dodging
                             if (horizontalDistance < dangerDistance) {
                                 // Dodge logic: Check if there is space above or below
@@ -610,7 +569,6 @@ private void addRocketToStack(int locationX, int locationY) {
                                 if (currentBossTarget == null || !bossrockets.contains(currentBossTarget)) {
                                     currentBossTarget = bossrockets.get(0); // Take the first RocketBoss
                                 }
-
                                 if (currentBossTarget != null) {
                                     float bossCenterX = (float) (currentBossTarget.getX() + ROCKET_BOSS_SIZE / 2);
                                     float bossCenterY = (float) (currentBossTarget.getY() + ROCKET_BOSS_SIZE / 2);
@@ -625,7 +583,7 @@ private void addRocketToStack(int locationX, int locationY) {
                                         }
                                     } else {
                                         bot.stopMoving(); // Stop moving when aligned
-                                        bullets.add(0, new Bullet(bot.getX(), bot.getY(), bot.getAngle(), 3, 1f)); // Shoot at RocketBoss
+                                        bullets.add(0, new Bullet(bot.getX(), bot.getY(), bot.getAngle(), 3, 3f)); // Shoot at RocketBoss
                                     }
                                 }
 
@@ -643,6 +601,11 @@ private void addRocketToStack(int locationX, int locationY) {
                                 if (!rocket.check(width, height)) {
                                     rockets.remove(rocket);
                                     currentTarget = null; // Reset the target when a rocket is removed
+                                }
+                                else {
+                                    if (bot.isAlive()) {
+                                        checkBot(rocket);
+                                    }
                                 }
                             }
                         }
@@ -666,8 +629,11 @@ private void addRocketToStack(int locationX, int locationY) {
                                 } else {
                                     if (bot.isAlive()&& bossrockets.isEmpty()) {
                                         checkBot(rocketBoss);
-
-
+                                    }
+                                    else {
+                                        if (bot.isAlive()) {
+                                            checkBot(rocketBoss);
+                                        }
                                     }
                                 }
                             }
@@ -700,28 +666,10 @@ private void addRocketToStack(int locationX, int locationY) {
                 minDistance = distance;
             }
         }
-
         // Recursive call for next rocket
         return findNearestRocketDFS(rockets, index + 1, nearestRocket, minDistance);
     }
-//    private RocketForDodge findNearestRocketDodgeDFS(List<RocketForDodge> rocketForDodges, int index, RocketForDodge nearestRocketForDodge, double minDistance) {
-//        if (index >= rocketForDodges.size()) return nearestRocketForDodge; // Base case
-//
-//        RocketForDodge currentRocket = rocketForDodges.get(index);
-//        if (currentRocket != null) {
-//            double distance = Math.hypot(
-//                    currentRocket.getX() - bot.getX(),
-//                    currentRocket.getY() - bot.getY()
-//            );
-//            if (distance < minDistance) {
-//                nearestRocketForDodge = currentRocket;
-//                minDistance = distance;
-//            }
-//        }
-//
-//        // Recursive call for next rocket
-//        return findNearestRocketDodgeDFS(rocketForDodges, index + 1, nearestRocketForDodge, minDistance);
-//    }
+
 private RocketForDodge findNearestRocketBFS() {
     RocketForDodge nearestRocket = null;
     double minDistance = Double.MAX_VALUE;
@@ -736,7 +684,6 @@ private RocketForDodge findNearestRocketBFS() {
                     currentRocket.getX() - bot.getX(),
                     currentRocket.getY() - bot.getY()
             );
-
             if (distance < minDistance) {
                 minDistance = distance;
                 nearestRocket = currentRocket;

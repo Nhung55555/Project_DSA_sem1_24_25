@@ -42,8 +42,6 @@ public class Rocket extends HealthBar{
     private float angle = 0;
     private Image image;
     private Area rocketShap;
-    private boolean alive = true;
-
 
     public void changeLocation(double x,double y){
         this.x = x;

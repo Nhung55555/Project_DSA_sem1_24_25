@@ -171,7 +171,6 @@ public class PanelGameDumbBot extends JPanel{
             }
         }
     }
-
     private void checkBulletsBoss(Bullet bullet) {
         for (int i = 0; i < bossrockets.size(); i++) {
             RocketBoss rocket = bossrockets.get(i);
@@ -248,7 +247,6 @@ public class PanelGameDumbBot extends JPanel{
                 if (!rocket.updateHealth(bot.getHealth())) {
                     rockets.remove(rocket);
 //                    sound.shoundDestroy();
-
                     double x = rocket.getX() + ROCKET_SIZE / 2;
                     double y = rocket.getY() + ROCKET_SIZE / 2;
                     boomEffects.add(new Effects(x, y, 5, 5, 75, 0.05f, new Color(248, 140, 9)));
@@ -260,7 +258,6 @@ public class PanelGameDumbBot extends JPanel{
                 if (!bot.updateHealth(rocketHp)) {
                     bot.setAlive(false);
 //                    bot.shoundDestroy();
-
                     double x = rocket.getX() + ROCKET_SIZE / 2;
                     double y = rocket.getY() + ROCKET_SIZE / 2;
                     boomEffects.add(new Effects(x, y, 5, 5, 75, 0.05f, new Color(248, 140, 9)));
@@ -360,7 +357,6 @@ public class PanelGameDumbBot extends JPanel{
                 int bulletsFired = 0;           // Count bullets fired
                 long lastShotTime = 0;          // Track the last shooting time
                 final long SHOOT_COOLDOWN = 10000; // 10 seconds cooldown in milliseconds
-
                 boolean moveUp = true;          // Random movement flag
 
                 while (start) {
@@ -386,7 +382,6 @@ public class PanelGameDumbBot extends JPanel{
                                 moveUp = true; // Change direction
                             }
                         }
-
                         // Shoot bullets every 10 seconds
                         if (bulletsFired < 3) {
                             bullets.add(0, new Bullet(bot.getX(), bot.getY(), bot.getAngle(), 2, 1f));
