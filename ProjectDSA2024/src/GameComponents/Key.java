@@ -1,6 +1,15 @@
 package GameComponents;
 
 public class Key {
+    private boolean key_right;
+    private boolean key_left;
+    private boolean key_space;
+    private boolean key_j;
+    private boolean key_k;
+    private boolean key_ESC;
+    private boolean key_enter;
+    private boolean key_pause;
+
     public boolean isKey_right() {
         return key_right;
     }
@@ -25,6 +34,13 @@ public class Key {
     public void setKey_space(boolean key_space) {
         this.key_space = key_space;
     }
+    public boolean isKey_ESC() {
+        return key_ESC;
+    }
+
+    public void setKey_ESC(boolean key_ESC) {
+        this.key_ESC = key_ESC;
+    }
 
     public boolean isKey_j() {
         return key_j;
@@ -48,11 +64,7 @@ public class Key {
     public void setKey_enter(boolean key_enter) {
         this.key_enter = key_enter;
     }
-    private boolean key_right;
-    private boolean key_left;
-    private boolean key_space;
-    private boolean key_j;
-    private boolean key_k;
+
 
     public boolean isKey_pause() {
         return key_pause;
@@ -62,7 +74,5 @@ public class Key {
         this.key_pause = key_pause;
     }
 
-    private boolean key_enter;
-    private boolean key_pause;
 
 }
