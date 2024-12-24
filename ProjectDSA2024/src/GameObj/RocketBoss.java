@@ -47,6 +47,11 @@ public class RocketBoss extends HealthBar{
     private double y;
     //chỉnh tốc độ
     private final float speed = 1f;
+
+    public void setAngle(float angle) {
+        this.angle = angle;
+    }
+
     private float angle = 0;
     private Image image;
     private Area rocketShap;
@@ -60,6 +65,11 @@ public class RocketBoss extends HealthBar{
     public void update(){
         x+= Math.cos(Math.toRadians(angle)) * speed;
         y+= Math.sin(Math.toRadians(angle)) * speed;
+    }
+
+    public void updateSineWave(){
+        x+= (Math.cos(Math.toRadians(angle))) * speed;
+        y+= (Math.sin(Math.toRadians(angle))) * speed;
     }
     public void changeAngle(float angle){
         if(angle<0){

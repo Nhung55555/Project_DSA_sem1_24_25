@@ -590,7 +590,6 @@ public class PanelGame extends JPanel {
     private Sound sound;
     //game object
     private Player player;
-    private Bot bot;
     private List<Bullet> bullets;
     private List<Rocket> rockets;
     private List<RocketBoss> bossrockets;
@@ -683,6 +682,9 @@ public class PanelGame extends JPanel {
                 for (int i = 0; i < bossrockets.size(); i++) {
                     RocketBoss rocketBoss = bossrockets.get(i);
                     if (rocketBoss != null) {
+                        if(rocketBoss.getX() <= (double) width/2){
+
+                        }
                         rocketBoss.update();
                         if (!rocketBoss.check(width, height)) {
                             bossrockets.remove(rocketBoss);
@@ -710,18 +712,14 @@ public class PanelGame extends JPanel {
                         case 1 -> {
                             sleep(1200);
                             System.out.println("Phase 1");
-                            for (int i = 0; i < 12; i++) {
-                                addRocketPhase1(i * 63);
-                                addBulletsPhase1(i * 20, i);
-                                addBulletsPhase1(i * 20, 2*i);
-                                addBulletsPhase1(i * 20, 3*i);
-                                addBulletsPhase1(i * 20, 4*i);
+                            for (int i = 0; i < 1; i++) {
+                                addRocketPhase1(i * 100 + 500);
+//                                addBulletsPhase1(i * 20, phase + 90);
+//                                addBulletsPhase1(i * 20, 2*phase + 90);
+//                                addBulletsPhase1(i * 20, 3*phase + 90);
+//                                addBulletsPhase1(i * 20, 4*phase + 90);
                             }
-                            sleep(1500);
-                            addBulletsPhase1(phase * 20, phase);
-                            addBulletsPhase1(phase * 20, 2*phase);
-                            addBulletsPhase1(phase * 20, 3*phase);
-                            addBulletsPhase1(phase * 20, 4*phase);
+                            sleep(15000);
                             while(!rockets.isEmpty()){
                                 sleep(100);
                             }
@@ -770,6 +768,52 @@ public class PanelGame extends JPanel {
         }
     });
 
+     Thread bulletSpawning = new Thread(new Runnable() {
+        @Override
+        public void run() {
+            while (start) {
+                for (int i = 0; i < bullets.size(); i++) {
+                    Bullet bullet = bullets.get(i);
+                    if (bullet != null) {
+                        bullet.update();
+                        checkBullets(bullet);
+                        checkBulletsBoss(bullet);
+                        if (!bullet.check(width, height)) {
+                            bullets.remove(bullet);
+                        }
+                    } else {
+                        bullets.remove(bullet);
+                    }
+                }
+                for (int i = 0; i < rocketBullets.size(); i++) {
+                    RocketBullets rocketbullet = rocketBullets.get(i);
+                    if (rocketbullet != null) {
+                        rocketbullet.update();
+                        checkBulletRocket(rocketbullet);
+                        if (!rocketbullet.check(width, height)) {
+                            rocketBullets.remove(rocketbullet);
+                            System.out.println("Rocekt rtemoves");
+                        }
+                    } else {
+                        rocketBullets.remove(rocketbullet);
+                    }
+                }
+                for (int i = 0; i < boomEffects.size(); i++) {
+                    Effects boomEffect = boomEffects.get(i);
+                    if (boomEffect != null) {
+                        boomEffect.update();
+                        if (!boomEffect.check()) {
+                            boomEffects.remove(boomEffect);
+                        }
+                    } else {
+                        boomEffects.remove(boomEffect);
+                    }
+                }
+                sleep(1);
+            }
+        }
+    });
+
     public PanelGame() {
         setBackground(Color.GREEN); // Set a background color for distinction
     }
@@ -797,21 +841,25 @@ public class PanelGame extends JPanel {
         rockets.add(rocket2);
     }
     private void addRocketPhase1(int locationIndexer){
-        int locationY = locationIndexer;
         Rocket rocket = new Rocket();
-        double shotDistanceAngle = Math.abs(player.getY()-locationIndexer) / Math.abs(player.getX() - width);
+        double shotDistanceAngle =  Math.abs(player.getY()-locationIndexer) / Math.abs(player.getX() - width);
         float angle = (float) Math.toDegrees(Math.atan(shotDistanceAngle));
-        RocketBullets rocketbullet = new RocketBullets(width-10 , locationY, 180 + angle , 30, 0.5f);
-        rocket.changeLocation(width, locationY);
+        if(locationIndexer >= 350){
+            angle += 180;
+        }else {
+            angle = 180 - angle;
+        }
+        RocketBullets rocketbullet = new RocketBullets(width-10 , locationIndexer, angle, 30, 0.5f);
+        rocket.changeLocation(width, locationIndexer);
         rocket.changeAngle(180);
 //        System.out.println(rocketbullet.getX());
 //        System.out.println(rocketbullet.getY());
         rockets.add(rocket);
         rocketBullets.add(rocketbullet);
     }
-    private void addBulletsPhase1(int locationIndexer, int angleIndexer){
+    private void addBulletsPhase1(int locationIndexer, int angleIndexer, int belongsRocket){
         int locationY = locationIndexer;
-        RocketBullets rocketbullet = new RocketBullets(width-300 , locationY, 25 * angleIndexer , 30, 0.5f);
+        RocketBullets rocketbullet = new RocketBullets(width-120 + locationIndexer , locationY, 25 * angleIndexer , 30, 0.5f);
         rocketBullets.add(rocketbullet);
     }
     private void addBossRocketPhase(int locationIndexer){
@@ -1054,50 +1102,7 @@ public class PanelGame extends JPanel {
     private void initBullets() {
         bullets = new ArrayList<>();
         rocketBullets = new ArrayList<>();
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                while (start) {
-                    for (int i = 0; i < bullets.size(); i++) {
-                        Bullet bullet = bullets.get(i);
-                        if (bullet != null) {
-                            bullet.update();
-                            checkBullets(bullet);
-                            checkBulletsBoss(bullet);
-                            if (!bullet.check(width, height)) {
-                                bullets.remove(bullet);
-                            }
-                        } else {
-                            bullets.remove(bullet);
-                        }
-                    }
-                    for (int i = 0; i < rocketBullets.size(); i++) {
-                        RocketBullets rocketbullet = rocketBullets.get(i);
-                        if (rocketbullet != null) {
-                            rocketbullet.update();
-                            checkBulletRocket(rocketbullet);
-                            if (!rocketbullet.check(width, height)) {
-                                rocketBullets.remove(rocketbullet);
-                            }
-                        } else {
-                            rocketBullets.remove(rocketbullet);
-                        }
-                    }
-                    for (int i = 0; i < boomEffects.size(); i++) {
-                        Effects boomEffect = boomEffects.get(i);
-                        if (boomEffect != null) {
-                            boomEffect.update();
-                            if (!boomEffect.check()) {
-                                boomEffects.remove(boomEffect);
-                            }
-                        } else {
-                            boomEffects.remove(boomEffect);
-                        }
-                    }
-                    sleep(1);
-                }
-            }
-        }).start();
+        bulletSpawning.start();
     }
 
     private Image loadImage(String path) {
