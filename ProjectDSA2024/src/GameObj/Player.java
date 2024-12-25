@@ -14,7 +14,7 @@ public class Player extends HealthBar{
     private final double screenHeight;
 
     public Player(double screenWidth, double screenHeight) {
-        super(new HealthPoints(10,10));
+        super(new HealthPoints(150,150));
         this.screenWidth = screenWidth;
         this.screenHeight = screenHeight;
 

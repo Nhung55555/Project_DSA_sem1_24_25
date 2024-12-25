@@ -661,6 +661,9 @@ public class PanelGame extends JPanel {
                     } //bỏ space thì trở về speedown
                     player.update();
                     player.changeAngle(angle);
+                    if(phase == 2 && key.isKey_enter()){
+                        System.exit(0);
+                    }
                 } else {
                     if (!player.isAlive() && key.isKey_enter()) {
                         System.exit(0);
@@ -712,20 +715,68 @@ public class PanelGame extends JPanel {
                         case 1 -> {
                             sleep(1200);
                             System.out.println("Phase 1");
-                            for (int i = 0; i < 1; i++) {
-                                addRocketPhase1(i * 100 + 500);
-//                                addBulletsPhase1(i * 20, phase + 90);
-//                                addBulletsPhase1(i * 20, 2*phase + 90);
-//                                addBulletsPhase1(i * 20, 3*phase + 90);
-//                                addBulletsPhase1(i * 20, 4*phase + 90);
+                            for (int i = 0; i < 7; i++) {
+                                addRocketPhase1(i * 100 + 60);
                             }
-                            sleep(15000);
+                            sleep(1500);
                             while(!rockets.isEmpty()){
                                 sleep(100);
                             }
                             sleep(1100);
                             System.out.println("Boss Appeared!");
                             addBossRocketPhase(300);
+                            for(int i = 0; i < 50; i ++){
+                                addBulletsPhase1(300, i +14);
+                            }
+                            sleep(900);
+//                            addBulletsTracking(300);
+//                            addBulletsTracking(315);
+//                            addBulletsTracking(285);
+//                            for(int i = 0; i < 50; i ++){
+//                                addBulletsPhase1(300, i +25);
+//                            }
+//                            sleep(300);
+//                            for(int i = 0; i < 70; i ++){
+//                                addBulletsPhase1(300, i +20);
+//                            }
+//                            sleep(300);
+//                            addBulletsTracking(300);
+//                            addBulletsTracking(315);
+//                            addBulletsTracking(285);
+//                            for(int i = 0; i < 30; i ++){
+//                                addBulletsPhase1(300, i +17);
+//                            }
+//                            sleep(400);
+//                            addBulletsTracking(300);
+//                            addBulletsTracking(315);
+//                            addBulletsTracking(285);
+//                            for(int i = 0; i <= 10; i ++){
+//                                addBulletsPhase1(300, i +35);
+//                            }
+//                            sleep(900);
+//                            addBulletsTracking(300);
+//                            addBulletsTracking(315);
+//                            addBulletsTracking(285);
+//                            for(int i = 0; i < 70; i ++){
+//                                addBulletsPhase1(300, i +67);
+//                            }
+//                            sleep(800);
+//                            for(int i = 0; i < 70; i ++){
+//                                addBulletsPhase1(300, i +45);
+//                            }
+//                            sleep(700);
+//                            for(int i = 0; i < 80; i ++){
+//                                addBulletsPhase1(300, i +19);
+//                            }
+//                            sleep(700);
+//                            for(int i = 0; i < 50; i ++){
+//                                addBulletsPhase1(300, i +56);
+//                            }
+//                            sleep(700);
+//                            for(int i = 0; i < 100; i ++){
+//                                addBulletsPhase1(300, i +70);
+//                            }
+//                            System.out.println("Finídhed");
                             while(!bossrockets.isEmpty()){
                                 sleep(10);
                             }
@@ -792,7 +843,6 @@ public class PanelGame extends JPanel {
                         checkBulletRocket(rocketbullet);
                         if (!rocketbullet.check(width, height)) {
                             rocketBullets.remove(rocketbullet);
-                            System.out.println("Rocekt rtemoves");
                         }
                     } else {
                         rocketBullets.remove(rocketbullet);
@@ -849,7 +899,7 @@ public class PanelGame extends JPanel {
         }else {
             angle = 180 - angle;
         }
-        RocketBullets rocketbullet = new RocketBullets(width-10 , locationIndexer, angle, 30, 0.5f);
+        RocketBullets rocketbullet = new RocketBullets(width-20 , locationIndexer, angle, 25, 0.5f);
         rocket.changeLocation(width, locationIndexer);
         rocket.changeAngle(180);
 //        System.out.println(rocketbullet.getX());
@@ -857,9 +907,19 @@ public class PanelGame extends JPanel {
         rockets.add(rocket);
         rocketBullets.add(rocketbullet);
     }
-    private void addBulletsPhase1(int locationIndexer, int angleIndexer, int belongsRocket){
-        int locationY = locationIndexer;
-        RocketBullets rocketbullet = new RocketBullets(width-120 + locationIndexer , locationY, 25 * angleIndexer , 30, 0.5f);
+    private void addBulletsPhase1(int locationIndexer, int angleIndexer){
+        RocketBullets rocketbullet = new RocketBullets(width-60 , locationIndexer, 25 * angleIndexer , 30, 0.5f);
+        rocketBullets.add(rocketbullet);
+    }
+    private void addBulletsTracking(int locationIndexer){
+        double shotDistanceAngle =  Math.abs(player.getY()-locationIndexer) / Math.abs(player.getX() - width);
+        float angle = (float) Math.toDegrees(Math.atan(shotDistanceAngle));
+        if(locationIndexer >= 350){
+            angle += 180;
+        }else {
+            angle = 180 - angle;
+        }
+        RocketBullets rocketbullet = new RocketBullets(width-60 , locationIndexer, angle, 30, 0.5f);
         rocketBullets.add(rocketbullet);
     }
     private void addBossRocketPhase(int locationIndexer){
