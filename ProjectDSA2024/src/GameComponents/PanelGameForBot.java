@@ -208,7 +208,7 @@ private void addRocketToStack(int locationX, int locationY) {
                     if (!rocket.updateHealth(bullet.getSize())) {
                         score++;
                         rockets.remove(rocket);
-//                        sound.shoundDestroy();
+                        sound.shoundDestroy();
                         double x = rocket.getX() + ROCKET_SIZE / 2;
                         double y = rocket.getY() + ROCKET_SIZE / 2;
                         boomEffects.add(new Effects(x, y, 5, 5, 75, 0.05f, new Color(248, 140, 9)));
@@ -217,7 +217,7 @@ private void addRocketToStack(int locationX, int locationY) {
                         boomEffects.add(new Effects(x, y, 10, 5, 100, 0.5f, new Color(126, 210, 84)));
                         boomEffects.add(new Effects(x, y, 10, 5, 150, 0.2f, new Color(213, 227, 51)));
                     } else {
-//                        sound.shoundHit();
+                        sound.shoundHit();
                     }
                     bullets.remove(bullet);
                 }
@@ -235,7 +235,7 @@ private void addRocketToStack(int locationX, int locationY) {
                     if (!rocket.updateHealth(bullet.getSize())) {
                         score++;
                         rocketForDodges.remove(rocket);
-//                        sound.shoundDestroy();
+                        sound.shoundDestroy();
                         double x = rocket.getX() + ROCKET_DODGE_SIZE / 2;
                         double y = rocket.getY() + ROCKET_DODGE_SIZE / 2;
                         boomEffects.add(new Effects(x, y, 5, 5, 75, 0.05f, new Color(248, 140, 9)));
@@ -244,7 +244,7 @@ private void addRocketToStack(int locationX, int locationY) {
                         boomEffects.add(new Effects(x, y, 10, 5, 100, 0.5f, new Color(126, 210, 84)));
                         boomEffects.add(new Effects(x, y, 10, 5, 150, 0.2f, new Color(213, 227, 51)));
                     } else {
-//                        sound.shoundHit();
+                        sound.shoundHit();
                     }
                     bullets.remove(bullet);
                 }
@@ -259,23 +259,23 @@ private void addRocketToStack(int locationX, int locationY) {
                 Area area = new Area(bullet.getShape());
                 area.intersect(rocket.getShape());
                 if (!area.isEmpty()) {
-//                    boomEffects.add(new Effects(bullet.getCenterX(), bullet.getCenterY(), 6, 20, 320, 0.5f, new Color(255, 218, 52)));
+                    boomEffects.add(new Effects(bullet.getCenterX(), bullet.getCenterY(), 6, 20, 320, 0.5f, new Color(255, 218, 52)));
                     boomEffects.add(new Effects(bullet.getCenterX(), bullet.getCenterY(), 6, 20, 310, 0.15f, new Color(222, 89, 6)));
-//                    boomEffects.add(new Effects(bullet.getCenterX(), bullet.getCenterY(), 6, 20, 220, 0.25f, new Color(255, 42, 4)));
+                    boomEffects.add(new Effects(bullet.getCenterX(), bullet.getCenterY(), 6, 20, 220, 0.25f, new Color(255, 42, 4)));
                     boomEffects.add(new Effects(bullet.getCenterX(), bullet.getCenterY(), 6, 20, 230, 0.7f, new Color(255, 245, 186)));
                     if (!rocket.updateHealth(bullet.getSize())) {
                         score += 100;
                         bossrockets.remove(rocket);
-//                        sound.shoundDestroy();
+                        sound.shoundDestroy();
                         double x = rocket.getX() + ROCKET_BOSS_SIZE/2;
                         double y = rocket.getY() + ROCKET_BOSS_SIZE/2;
-//                        boomEffects.add(new Effects(x, y, 5, 15, 175, 0.25f, new Color(255, 38, 0)));
-//                        boomEffects.add(new Effects(x, y, 5, 25, 175, 0.1f, new Color(255, 144, 144)));
+                        boomEffects.add(new Effects(x, y, 5, 15, 175, 0.25f, new Color(255, 38, 0)));
+                        boomEffects.add(new Effects(x, y, 5, 25, 175, 0.1f, new Color(255, 144, 144)));
                         boomEffects.add(new Effects(x, y, 10, 12, 200, 0.3f, new Color(246, 227, 9)));
                         boomEffects.add(new Effects(x, y, 10, 40, 200, 0.5f, new Color(168, 229, 111)));
-//                        boomEffects.add(new Effects(x, y, 10, 25, 250, 0.2f, new Color(248, 196, 72)));
+                        boomEffects.add(new Effects(x, y, 10, 25, 250, 0.2f, new Color(248, 196, 72)));
                     } else {
-//                        sound.shoundHit();
+                        sound.shoundHit();
                     }
                     bullets.remove(bullet);
                 }
@@ -291,7 +291,7 @@ private void addRocketToStack(int locationX, int locationY) {
                 double rocketHp = rocket.getHealth();
                 if (!rocket.updateHealth(bot.getHealth())) {
                     bossrockets.remove(rocket);
-//                    sound.shoundDestroy();
+                    sound.shoundDestroy();
 
                     double x = rocket.getX() + ROCKET_SIZE / 2;
                     double y = rocket.getY() + ROCKET_SIZE / 2;
@@ -327,7 +327,7 @@ private void addRocketToStack(int locationX, int locationY) {
                 double rocketHp = rocket.getHealth();
                 if (!rocket.updateHealth(bot.getHealth())) {
                     rockets.remove(rocket);
-//                    sound.shoundDestroy();
+                    sound.shoundDestroy();
 
                     double x = rocket.getX() + ROCKET_SIZE / 2;
                     double y = rocket.getY() + ROCKET_SIZE / 2;
@@ -643,7 +643,7 @@ private void addRocketToStack(int locationX, int locationY) {
 
                     } else {
                         if (key.isKey_enter()) {
-                            resetGameBot(); // Restart the game if the bot is dead
+                            System.exit(0); // Restart the game if the bot is dead
                         }
                     }
                 }
@@ -780,10 +780,9 @@ private RocketForDodge findNearestRocketBFS() {
             g2.drawString("Score : " + score, 10, 20);
 
             if(bot.isAlive()&&rockets.isEmpty()&&rocketForDodges.isEmpty()){
-                sleep(35);
-                if(bossrockets.isEmpty()){
+                if(bossrockets.isEmpty() && phase ==2){
                     String text = "WIN";
-                    String textKey = "Press key enter to Continue ...";
+                    String textKey = "...";
                     g2.setFont(getFont().deriveFont(Font.BOLD, 50f));
                     FontMetrics fm = g2.getFontMetrics();
                     Rectangle2D r2 = fm.getStringBounds(text, g2);

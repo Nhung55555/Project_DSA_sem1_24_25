@@ -13,6 +13,19 @@ public class Player extends HealthBar{
     private final double screenWidth;
     private final double screenHeight;
 
+
+    public static final double PLAYER_SIZE = 64;
+    private double x;
+    private double y;
+    private final float MAX_SPEED = 6f;
+    private float speed = 0f;
+    private float angle = 0f;
+    private Area playerShap;
+    private  Image image;
+    private  Image image_speed;
+    private boolean speedUp;
+    private boolean alive = true;
+
     public Player(double screenWidth, double screenHeight) {
         super(new HealthPoints(150,150));
         this.screenWidth = screenWidth;
@@ -51,19 +64,6 @@ public class Player extends HealthBar{
             e.printStackTrace();
         }
     }
-    public static final double PLAYER_SIZE = 64;
-    private double x;
-    private double y;
-    private final float MAX_SPEED = 6f;
-    private float speed = 0f;
-    private float angle = 0f;
-    private Area playerShap;
-    private  Image image;
-    private  Image image_speed;
-    private boolean speedUp;
-    private boolean alive = true;
-
-
 
 
     public void changeLocation(double x,double y){

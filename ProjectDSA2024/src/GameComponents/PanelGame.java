@@ -729,54 +729,54 @@ public class PanelGame extends JPanel {
                                 addBulletsPhase1(300, i +14);
                             }
                             sleep(900);
-//                            addBulletsTracking(300);
-//                            addBulletsTracking(315);
-//                            addBulletsTracking(285);
-//                            for(int i = 0; i < 50; i ++){
-//                                addBulletsPhase1(300, i +25);
-//                            }
-//                            sleep(300);
-//                            for(int i = 0; i < 70; i ++){
-//                                addBulletsPhase1(300, i +20);
-//                            }
-//                            sleep(300);
-//                            addBulletsTracking(300);
-//                            addBulletsTracking(315);
-//                            addBulletsTracking(285);
-//                            for(int i = 0; i < 30; i ++){
-//                                addBulletsPhase1(300, i +17);
-//                            }
-//                            sleep(400);
-//                            addBulletsTracking(300);
-//                            addBulletsTracking(315);
-//                            addBulletsTracking(285);
-//                            for(int i = 0; i <= 10; i ++){
-//                                addBulletsPhase1(300, i +35);
-//                            }
-//                            sleep(900);
-//                            addBulletsTracking(300);
-//                            addBulletsTracking(315);
-//                            addBulletsTracking(285);
-//                            for(int i = 0; i < 70; i ++){
-//                                addBulletsPhase1(300, i +67);
-//                            }
-//                            sleep(800);
-//                            for(int i = 0; i < 70; i ++){
-//                                addBulletsPhase1(300, i +45);
-//                            }
-//                            sleep(700);
-//                            for(int i = 0; i < 80; i ++){
-//                                addBulletsPhase1(300, i +19);
-//                            }
-//                            sleep(700);
-//                            for(int i = 0; i < 50; i ++){
-//                                addBulletsPhase1(300, i +56);
-//                            }
-//                            sleep(700);
-//                            for(int i = 0; i < 100; i ++){
-//                                addBulletsPhase1(300, i +70);
-//                            }
-//                            System.out.println("Finídhed");
+                            addBulletsTracking(300);
+                            addBulletsTracking(315);
+                            addBulletsTracking(285);
+                            for(int i = 0; i < 50; i ++){
+                                addBulletsPhase1(300, i +25);
+                            }
+                            sleep(300);
+                            for(int i = 0; i < 70; i ++){
+                                addBulletsPhase1(300, i +20);
+                            }
+                            sleep(300);
+                            addBulletsTracking(300);
+                            addBulletsTracking(315);
+                            addBulletsTracking(285);
+                            for(int i = 0; i < 30; i ++){
+                                addBulletsPhase1(300, i +17);
+                            }
+                            sleep(400);
+                            addBulletsTracking(300);
+                            addBulletsTracking(315);
+                            addBulletsTracking(285);
+                            for(int i = 0; i <= 10; i ++){
+                                addBulletsPhase1(300, i +35);
+                            }
+                            sleep(900);
+                            addBulletsTracking(300);
+                            addBulletsTracking(315);
+                            addBulletsTracking(285);
+                            for(int i = 0; i < 70; i ++){
+                                addBulletsPhase1(300, i +67);
+                            }
+                            sleep(800);
+                            for(int i = 0; i < 70; i ++){
+                                addBulletsPhase1(300, i +45);
+                            }
+                            sleep(700);
+                            for(int i = 0; i < 80; i ++){
+                                addBulletsPhase1(300, i +19);
+                            }
+                            sleep(700);
+                            for(int i = 0; i < 50; i ++){
+                                addBulletsPhase1(300, i +56);
+                            }
+                            sleep(700);
+                            for(int i = 0; i < 100; i ++){
+                                addBulletsPhase1(300, i +70);
+                            }
+                            System.out.println("Finídhed");
                             while(!bossrockets.isEmpty()){
                                 sleep(10);
                             }

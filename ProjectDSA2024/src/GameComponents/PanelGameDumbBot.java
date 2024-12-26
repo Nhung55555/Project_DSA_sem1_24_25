@@ -420,7 +420,7 @@ public class PanelGameDumbBot extends JPanel{
                     } else {
                         // Restart the game if the bot is dead
                         if (key.isKey_enter()) {
-                            resetGameBot();
+                            System.exit(0);
                         }
                     }
                 }
@@ -509,7 +509,7 @@ public class PanelGameDumbBot extends JPanel{
 
         if (!bot.isAlive()) {
             String text = "GAME OVER";
-            String textKey = "Press key enter to Continue ...";
+            String textKey = "LOSE...";
             g2.setFont(getFont().deriveFont(Font.BOLD, 50f));
             FontMetrics fm = g2.getFontMetrics();
             Rectangle2D r2 = fm.getStringBounds(text, g2);
